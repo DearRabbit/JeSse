@@ -13,4 +13,5 @@ extern JsTypeObject JsInt_Type;
 
 #define JsInt_CheckType(obj) ((obj)->ob_type == &JsInt_Type)
 
+// C - API
 JsTypeObject* JsInt_FromLong(long);

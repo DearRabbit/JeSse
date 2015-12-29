@@ -3,6 +3,7 @@
 static JsObject *
 type_new(JsTypeObject *type, JsObject *args, JsObject *kwds)
 {
+	// No implementaion.
 	return NULL;
 }
 

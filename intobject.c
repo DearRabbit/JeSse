@@ -13,31 +13,39 @@
    -NSMALLNEGINTS (inclusive) to NSMALLPOSINTS (not inclusive).
 
 */
-//static JsIntObject *small_ints[NSMALLNEGINTS + NSMALLPOSINTS];
-JsIntObject *small_ints[NSMALLNEGINTS + NSMALLPOSINTS];
+	#ifdef JS_DEBUG
+		JsIntObject *small_ints[NSMALLNEGINTS + NSMALLPOSINTS];
+	#else
+		static JsIntObject *small_ints[NSMALLNEGINTS + NSMALLPOSINTS];
+	#endif
 #endif
 
-// c-api
+// C - API
 JsTypeObject* JsInt_FromLong(long ival)
 {
 	return NULL;
 }
 
 // methods
-static JsObject *
+/*static JsObject *
 int_new(JsTypeObject *type, JsObject *args, JsObject *kwds)
 {
 	return NULL;
-}
+}*/
 
 static void
-int_dealloc(JsIntObject *type)
+int_dealloc(JsIntObject *obj)
 {
-	// free something
+	if (JsInt_CheckType(obj))
+    {
+        free(obj);
+    }
+    else
+        dbgprint("Invalid type '%s' in deallocation of intobject\n", Js_Type(obj)->tp_name);
 }
 
 static int
-int_print(JsIntObject *v, FILE *fp, int flags)
+int_print(JsIntObject *v, FILE *fp)
      /* flags -- not used but required by interface */
 {
     long int_val = v->ob_ival;
@@ -89,7 +97,7 @@ JsTypeObject JsInt_Type =
 
     JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE,
 
-	int_new,							/* tp_new */
+	NULL,								/* no new func, generate by api*/
 	(destructor)int_dealloc,			/* tp_dealloc */
 	(printfunc)int_print,				/* tp_print */
 	(tostringfunc)int_to_decimal_string,/* tp_tostr */
@@ -98,8 +106,7 @@ JsTypeObject JsInt_Type =
 	(hashfunc)int_hash,					/* tp_hash */
 };
 
-// initial of integer mod
-// return -1 if error
+/* return -1 if error */
 int
 _JsInt_Init(void)
 {

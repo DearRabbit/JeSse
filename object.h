@@ -61,14 +61,14 @@ typedef size_t (*lenfunc)(JsObject *);
 // methods
 // newfunc: TypeObject *type, Object *args, Object *kwds
 // args stores arguments without key, kwds is a list
-typedef JsObject *(*newfunc)(struct _typeobject *, JsObject *, JsObject *);
-typedef void (*destructor)(JsObject *);
+typedef JsObject *(*newfunc)(struct _typeobject *type, JsObject *args, JsObject *kwds);
+typedef void (*destructor)(JsObject *obj);
 // print to FILE* fp
-typedef int (*printfunc)(JsObject *, FILE *);
-typedef JsObject* (*tostringfunc)(JsObject *);
+typedef int (*printfunc)(JsObject *obj, FILE *fp);
+typedef JsObject* (*tostringfunc)(JsObject *obj);
 // return -1 if i<j, 1 if i>j, 0 if equals
-typedef int (*cmpfunc)(JsObject *, JsObject *);
-typedef long (*hashfunc)(JsObject *);
+typedef int (*cmpfunc)(JsObject *obja, JsObject *objb);
+typedef long (*hashfunc)(JsObject *obj);
 
 // TODO: Type Flags List: add more?
 #define JS_TPFLAGS_DEFAULT (1L<<0)
