@@ -13,7 +13,8 @@
    -NSMALLNEGINTS (inclusive) to NSMALLPOSINTS (not inclusive).
 
 */
-static JsIntObject *small_ints[NSMALLNEGINTS + NSMALLPOSINTS];
+//static JsIntObject *small_ints[NSMALLNEGINTS + NSMALLPOSINTS];
+JsIntObject *small_ints[NSMALLNEGINTS + NSMALLPOSINTS];
 #endif
 
 // c-api
@@ -96,3 +97,31 @@ JsTypeObject JsInt_Type =
 	(cmpfunc)int_compare,				/* tp_compare */
 	(hashfunc)int_hash,					/* tp_hash */
 };
+
+// initial of integer mod
+// return -1 if error
+int
+_JsInt_Init(void)
+{
+    JsIntObject *v;
+    int ival;
+#if NSMALLNEGINTS + NSMALLPOSINTS > 0
+    v = malloc(sizeof(JsIntObject)*(NSMALLNEGINTS + NSMALLPOSINTS));
+    if (v == NULL)
+    {
+        return -1;
+    }
+    for (ival = -NSMALLNEGINTS; ival < NSMALLPOSINTS; ival++, v++) {
+        JsObject_INIT(v, &JsInt_Type);
+        v->ob_ival = ival;
+        small_ints[ival + NSMALLNEGINTS] = v;
+    }
+#endif
+    return 0;
+}
+
+void
+_JsInt_Deinit(void)
+{
+    free(small_ints[0]);
+}

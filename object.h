@@ -29,16 +29,22 @@ typedef struct {
 } JsVarObject;
 
 // Object - basic methods
-#define Js_GetRefCnt(obj)	(((JsObject*)(obj)) -> ob_refcnt)
-#define Js_GetType(obj)		(((JsObject*)(obj)) -> ob_type)
-#define Js_GetSize(obj)		(((JsObject*)(obj)) -> ob_size)
+#define Js_RefCnt(obj)	(((JsObject*)(obj)) -> ob_refcnt)
+#define Js_Type(obj)	(((JsObject*)(obj)) -> ob_type)
+#define Js_Size(obj)	(((JsObject*)(obj)) -> ob_size)
 
+#define _Js_NewReference(op)						\
+    (Js_RefCnt(op) = 1)
 #define _Js_Dealloc(obj)							\
-    ((*Js_GetType(obj)->tp_dealloc)((JsObject *)(obj)))
+    ((*Js_Type(obj)->tp_dealloc)((JsObject *)(obj)))
+
+#define JsObject_INIT(op, typeobj) \
+    ( Js_Type(op) = (typeobj), _Js_NewReference((JsObject *)(op)), (op) )
+#define JsObject_INIT_VAR(op, typeobj, size) \
+    ( Js_Size(op) = (size), JsObject_INIT((op), (typeobj)) )
 
 #define Js_INCREF(obj)								\
     (((JsObject*)(obj))->ob_refcnt++)
-
 #define Js_DECREF(obj)								\
 	{												\
 		if (--((JsObject*)(obj))->ob_refcnt == 0)	\
