@@ -4,6 +4,9 @@ LDFLAGS =
 
 .PHONY = clean all test
 
+TEST_TARGET = test
+TARGET = 
+
 all: 
 
 object.o: object.c
@@ -17,11 +20,12 @@ typeobject.o: typeobject.c
 	
 
 test: object.o typeobject.o intobject.o testunit.o 
-	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o test
+	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $(TEST_TARGET)
 
 testunit.o: testunit.c
 	$(CC) $(DBGFLAGS) -c $^
 
 clean:
+	rm -rf *.dSYM/
 	rm -f *.o
-	rm test
+	rm -f $(TEST_TARGET)
