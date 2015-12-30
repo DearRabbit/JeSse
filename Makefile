@@ -15,11 +15,15 @@ object.o: object.c
 intobject.o: intobject.c
 	$(CC) $(DBGFLAGS) -c $^
 
+stringobject.o: stringobject.c
+	$(CC) $(DBGFLAGS) -c $^
+
 typeobject.o: typeobject.c
 	$(CC) $(DBGFLAGS) -c $^
+
 	
 
-test: object.o typeobject.o intobject.o testunit.o 
+test: object.o typeobject.o intobject.o stringobject.o testunit.o 
 	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $(TEST_TARGET)
 
 testunit.o: testunit.c
