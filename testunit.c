@@ -1,6 +1,5 @@
 #include <stdio.h>
 
-#include "intobject.h"
 #include "runtime.h"
 
 #ifdef JS_DEBUG
@@ -14,8 +13,8 @@ int main()
 
 #ifdef JS_DEBUG
 	JsTypeObject* inttype = Js_Type(small_ints[0]);
-	printf("%ld\n", small_ints[0]->ob_ival); // -7
-	inttype->tp_dealloc(inttype);
+	printf("%ld\n", JsInt_GetLong(0)); // -7
+	printf("%ld\n", (0xffffffffL + 1));
 
 #endif
 	
