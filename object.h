@@ -4,19 +4,19 @@
 #include "utility.h"
 
 #define JsObject_HEAD				\
-	size_t ob_refcnt;				\
+	ssize_t ob_refcnt;				\
 	struct _typeobject *ob_type;
 
 #define JsObject_VAR_HEAD			\
     JsObject_HEAD					\
-    size_t ob_size; /* Number of items in variable part */
+    ssize_t ob_size; /* Number of items in variable part */
 
 #define JsObject_HEAD_INIT(type)  1, type,
 
 #define JsVarObject_HEAD_INIT(type, size)	\
     JsObject_HEAD_INIT(type) size,
 
-#define INVALID_SIZE (size_t)-1
+#define INVALID_SIZE (ssize_t)-1
 
 // Object - define:
 // Object, VarObject
@@ -31,7 +31,7 @@ typedef struct {
 // Object - basic methods
 #define Js_RefCnt(obj)	(((JsObject*)(obj)) -> ob_refcnt)
 #define Js_Type(obj)	(((JsObject*)(obj)) -> ob_type)
-#define Js_Size(obj)	(((JsObject*)(obj)) -> ob_size)
+#define Js_Size(obj)	(((JsVarObject*)(obj)) -> ob_size)
 
 #define _Js_NewReference(obj)						\
     (Js_RefCnt(obj) = 1)
@@ -57,7 +57,7 @@ typedef JsObject* (*unaryfunc)(JsObject *);
 typedef JsObject* (*binaryfunc)(JsObject *, JsObject *);
 typedef JsObject* (*ternaryfunc)(JsObject *, JsObject *, JsObject *);
 typedef int (*inquiry)(JsObject *);
-typedef size_t (*lenfunc)(JsObject *);
+typedef ssize_t (*lenfunc)(JsObject *);
 // methods
 // newfunc: TypeObject *type, Object *args, Object *kwds
 // args stores arguments without key, kwds is a list
@@ -66,7 +66,7 @@ typedef void (*destructor)(JsObject *obj);
 // print to FILE* fp
 typedef int (*printfunc)(JsObject *obj, FILE *fp);
 typedef JsObject* (*tostringfunc)(JsObject *obj);
-// return -1 if i<j, 1 if i>j, 0 if equals
+// return neg if i<j, pos if i>j, 0 if equals
 typedef int (*cmpfunc)(JsObject *obja, JsObject *objb);
 typedef long (*hashfunc)(JsObject *obj);
 
@@ -74,14 +74,14 @@ typedef long (*hashfunc)(JsObject *obj);
 #define JS_TPFLAGS_DEFAULT			(1L<<0)
 #define JS_TPFLAGS_BASETYPE			(1L<<10)
 
-#define Py_TPFLAGS_INT_SUBCLASS 	(1L<<23)
+#define JS_TPFLAGS_INT_CAST			(1L<<23)
 
 // Object - define:
 // TypeObject
 typedef struct _typeobject {
 	JsObject_HEAD
 	const char *tp_name; /* For printing */
-	size_t tp_basicsize, tp_itemsize; /* For allocation */
+	ssize_t tp_basicsize, tp_itemsize; /* For allocation */
 
 	/* Flags to define presence of optional/expanded features */
     long tp_flags;

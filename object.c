@@ -1,4 +1,4 @@
-#include "object.h"
+#include "runtime.h"
 
 long
 _Js_HashPointer(void *p)
