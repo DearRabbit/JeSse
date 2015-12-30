@@ -144,6 +144,7 @@ _JsInt_Init(void)
 	v = malloc(sizeof(JsIntObject)*(NSMALLNEGINTS + NSMALLPOSINTS));
 	if (v == NULL)
 	{
+		dbgprint("Initialization of intobject failed");
 		return -1;
     }
     for (ival = -NSMALLNEGINTS; ival < NSMALLPOSINTS; ival++, v++) {
@@ -158,5 +159,6 @@ _JsInt_Init(void)
 void
 _JsInt_Deinit(void)
 {
-	free(small_ints[0]);
+	if (small_ints[0]!=NULL)
+		free(small_ints[0]);
 }
