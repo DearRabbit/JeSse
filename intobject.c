@@ -21,9 +21,31 @@
 #endif
 
 // C - API
-JsTypeObject* JsInt_FromLong(long ival)
+JsObject *
+JsInt_FromLong(long ival)
 {
-	return NULL;
+	register JsIntObject *v;
+
+#if NSMALLNEGINTS + NSMALLPOSINTS > 0
+	if (-NSMALLNEGINTS <= ival && ival < NSMALLPOSINTS) {
+		v = small_ints[ival + NSMALLNEGINTS];
+		Js_INCREF(v);
+		return (JsObject *) v;
+	}
+#endif
+	v = malloc(sizeof(JsIntObject));
+	JsObject_INIT(v, &JsInt_Type);
+	v->ob_ival = ival;
+	return (JsObject *) v;
+}
+
+long 
+JsInt_GetLong(JsObject *obj)
+{
+	if (obj && JsInt_CheckType(obj))
+	{
+		return ((JsIntObject *)obj)->ob_ival;
+	}
 }
 
 // methods
@@ -37,24 +59,22 @@ static void
 int_dealloc(JsIntObject *obj)
 {
 	if (JsInt_CheckType(obj))
-    {
-        free(obj);
-    }
-    else
-        dbgprint("Invalid type '%s' in deallocation of intobject\n", Js_Type(obj)->tp_name);
+		free(obj);
+	else
+		dbgprint("Invalid type '%s' in deallocation of intobject\n", Js_Type(obj)->tp_name);
 }
 
 static int
 int_print(JsIntObject *v, FILE *fp)
-     /* flags -- not used but required by interface */
 {
-    long int_val = v->ob_ival;
-    fprintf(fp, "%ld", int_val);
-    return 0;
+	long int_val = v->ob_ival;
+	fprintf(fp, "%ld", int_val);
+	return 0;
 }
 
 static JsObject *
-int_to_decimal_string(JsIntObject *v) {
+int_to_decimal_string(JsIntObject *v) 
+{
     char buf[sizeof(long)*CHAR_BIT/3+6], *p, *bufend;
     long n = v->ob_ival;
     unsigned long absn;
@@ -74,9 +94,9 @@ int_to_decimal_string(JsIntObject *v) {
 static int
 int_compare(JsIntObject *v, JsIntObject *w)
 {
-    register long i = v->ob_ival;
-    register long j = w->ob_ival;
-    return (i < j) ? -1 : (i > j) ? 1 : 0;
+	register long i = v->ob_ival;
+	register long j = w->ob_ival;
+	return (i < j) ? -1 : (i > j) ? 1 : 0;
 }
 
 static long
@@ -92,10 +112,11 @@ JsTypeObject JsInt_Type =
 {
 	JsObject_HEAD_INIT(&JsType_Type)
 	"int",
-    sizeof(JsIntObject),
-    0,
+	sizeof(JsIntObject),
+	0,
 
-    JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE,
+	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE |
+		Js_TPFLAGS_INT_SUBCLASS,
 
 	NULL,								/* no new func, generate by api*/
 	(destructor)int_dealloc,			/* tp_dealloc */
@@ -110,25 +131,25 @@ JsTypeObject JsInt_Type =
 int
 _JsInt_Init(void)
 {
-    JsIntObject *v;
-    int ival;
+	JsIntObject *v;
+	int ival;
 #if NSMALLNEGINTS + NSMALLPOSINTS > 0
-    v = malloc(sizeof(JsIntObject)*(NSMALLNEGINTS + NSMALLPOSINTS));
-    if (v == NULL)
-    {
-        return -1;
+	v = malloc(sizeof(JsIntObject)*(NSMALLNEGINTS + NSMALLPOSINTS));
+	if (v == NULL)
+	{
+		return -1;
     }
     for (ival = -NSMALLNEGINTS; ival < NSMALLPOSINTS; ival++, v++) {
-        JsObject_INIT(v, &JsInt_Type);
-        v->ob_ival = ival;
-        small_ints[ival + NSMALLNEGINTS] = v;
-    }
+		JsObject_INIT(v, &JsInt_Type);
+		v->ob_ival = ival;
+		small_ints[ival + NSMALLNEGINTS] = v;
+	}
 #endif
-    return 0;
+	return 0;
 }
 
 void
 _JsInt_Deinit(void)
 {
-    free(small_ints[0]);
+	free(small_ints[0]);
 }

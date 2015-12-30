@@ -33,15 +33,15 @@ typedef struct {
 #define Js_Type(obj)	(((JsObject*)(obj)) -> ob_type)
 #define Js_Size(obj)	(((JsObject*)(obj)) -> ob_size)
 
-#define _Js_NewReference(op)						\
-    (Js_RefCnt(op) = 1)
+#define _Js_NewReference(obj)						\
+    (Js_RefCnt(obj) = 1)
 #define _Js_Dealloc(obj)							\
     ((*Js_Type(obj)->tp_dealloc)((JsObject *)(obj)))
 
-#define JsObject_INIT(op, typeobj) \
-    ( Js_Type(op) = (typeobj), _Js_NewReference((JsObject *)(op)), (op) )
-#define JsObject_INIT_VAR(op, typeobj, size) \
-    ( Js_Size(op) = (size), JsObject_INIT((op), (typeobj)) )
+#define JsObject_INIT(obj, typeobj) \
+    ( Js_Type(obj) = (typeobj), _Js_NewReference((JsObject *)(obj)), (obj) )
+#define JsObject_INIT_VAR(obj, typeobj, size) \
+    ( Js_Size(obj) = (size), JsObject_INIT((obj), (typeobj)) )
 
 #define Js_INCREF(obj)								\
     (((JsObject*)(obj))->ob_refcnt++)
@@ -71,8 +71,10 @@ typedef int (*cmpfunc)(JsObject *obja, JsObject *objb);
 typedef long (*hashfunc)(JsObject *obj);
 
 // TODO: Type Flags List: add more?
-#define JS_TPFLAGS_DEFAULT (1L<<0)
-#define JS_TPFLAGS_BASETYPE (1L<<10)
+#define JS_TPFLAGS_DEFAULT			(1L<<0)
+#define JS_TPFLAGS_BASETYPE			(1L<<10)
+
+#define Py_TPFLAGS_INT_SUBCLASS 	(1L<<23)
 
 // Object - define:
 // TypeObject
