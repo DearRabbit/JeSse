@@ -1,4 +1,4 @@
-#include "intobject.h"
+#include "runtime.h"
 
 #ifndef NSMALLPOSINTS
 #define NSMALLPOSINTS           257
@@ -46,6 +46,13 @@ JsInt_GetLong(JsObject *obj)
 	{
 		return ((JsIntObject *)obj)->ob_ival;
 	}
+	if (obj == NULL || !JsInt_CheckCast(obj))
+	{
+		dbgprint("Invalid type in deallocation of intobject\n");
+		return -1;
+	}
+	//TODO: Mostly a string, add implement: atol
+	return 0;
 }
 
 // methods
@@ -61,7 +68,7 @@ int_dealloc(JsIntObject *obj)
 	if (JsInt_CheckType(obj))
 		free(obj);
 	else
-		dbgprint("Invalid type '%s' in deallocation of intobject\n", Js_Type(obj)->tp_name);
+		dbgprint("Invalid type in deallocation of intobject\n");
 }
 
 static int
@@ -116,7 +123,7 @@ JsTypeObject JsInt_Type =
 	0,
 
 	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE |
-		Js_TPFLAGS_INT_SUBCLASS,
+		JS_TPFLAGS_INT_CAST,
 
 	NULL,								/* no new func, generate by api*/
 	(destructor)int_dealloc,			/* tp_dealloc */
