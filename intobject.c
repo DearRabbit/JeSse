@@ -34,6 +34,10 @@ JsInt_FromLong(long ival)
 	}
 #endif
 	v = malloc(sizeof(JsIntObject));
+	if (v == NULL)
+	{
+		return JsRtErr_NoMemory();
+	}
 	JsObject_INIT(v, &JsInt_Type);
 	v->ob_ival = ival;
 	return (JsObject *) v;

@@ -21,9 +21,11 @@ stringobject.o: stringobject.c
 typeobject.o: typeobject.c
 	$(CC) $(DBGFLAGS) -c $^
 
+runtime.o: runtime.c
+	$(CC) $(DBGFLAGS) -c $^
 	
 
-test: object.o typeobject.o intobject.o stringobject.o testunit.o 
+test: object.o typeobject.o intobject.o stringobject.o runtime.o testunit.o 
 	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $(TEST_TARGET)
 
 testunit.o: testunit.c

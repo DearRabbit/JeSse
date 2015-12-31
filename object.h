@@ -48,7 +48,7 @@ typedef struct {
 #define Js_DECREF(obj)								\
 	{												\
 		if (--((JsObject*)(obj))->ob_refcnt == 0)	\
-			_Js_Dealloc(obj)						\
+			_Js_Dealloc(obj);						\
 	}
 
 // typedef - function ptr groups:

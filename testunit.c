@@ -4,20 +4,20 @@
 
 #ifdef JS_DEBUG
 extern JsIntObject* small_ints[];
+extern JsStringObject *characters[];
+extern JsStringObject *nullstring;
 #endif
 
 int main()
 {
-	_JsInt_Init();
-	printf("Int Object size:%ld\n", sizeof(JsIntObject));
+	_JsString_Init();
+	JsStringObject *v = JsString_FromString("nullstring");
 
-#ifdef JS_DEBUG
-	JsTypeObject* inttype = Js_Type(small_ints[0]);
-	printf("%ld\n", JsInt_GetLong(0)); // -7
-	printf("%ld\n", (0xffffffffL + 1));
-
-#endif
+	printf("%s\n", JsString_GetCString(characters['a']) );
 	
-	_JsInt_Deinit();
+	printf("%s\n", JsString_GetCString(v) );
+
+	Js_DECREF(v);
+	_JsString_Deinit();
 	return 0;
 }

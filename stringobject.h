@@ -27,6 +27,10 @@ extern JsTypeObject JsString_Type;
 #define JsString_CheckCast(obj) (Js_Type(obj)->tp_tostr != NULL)
 
 // C - API
-JsObject* JsString_FromStringAndSize(const char *, ssize_t);
+// unsafe?
+JsObject* JsString_FromStringAndSize(const char *, size_t);
 JsObject* JsString_FromString(const char *);
 char * JsString_GetCString(JsObject *);
+
+// for speed
+#define JsString_AS_CSTRING(op) (((JsStringObject *)(op))->ob_sval)

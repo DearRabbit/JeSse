@@ -1,24 +1,69 @@
 #include "runtime.h"
 
-#define CHAROBJECT_MAX 256
+#define CHAROBJECT_MAX 255
 
-static JsStringObject *characters[CHAROBJECT_MAX];
-static JsStringObject *nullstring;
+// nullstring is the first element of characters
+#ifdef JS_DEBUG
+	JsStringObject *characters[CHAROBJECT_MAX + 1];
+	JsStringObject *nullstring;
+#else
+	static JsStringObject *characters[CHAROBJECT_MAX + 1];
+	static JsStringObject *nullstring;
+#endif
 
-JsObject* JsString_FromStringAndSize(const char *str, ssize_t len)
+JsObject* JsString_FromStringAndSize(const char *str, size_t size)
 {
-	return NULL;
+	register JsStringObject *op;
+	if (size == 0 && (op = nullstring) != NULL) 
+	{
+		Js_INCREF(op);
+		return (JsObject *)op;
+	}
+	if (size == 1 && str != NULL &&
+        (op = characters[*str & CHAROBJECT_MAX]) != NULL)
+	{
+		Js_INCREF(op);
+		return (JsObject *)op;
+	}
+
+	op = (JsStringObject *)malloc(sizeof(JsStringObject) + size);
+	if (op == NULL)
+	{
+		return JsRtErr_NoMemory();
+	}
+	JsObject_INIT_VAR(op, &JsString_Type, size);
+	op->ob_shash = -1;
+	if (str != NULL)
+		memcpy(op->ob_sval, str, size);
+	op->ob_sval[size] = '\0';
+
+	return (JsObject *) op;
 }
 
 JsObject* JsString_FromString(const char *str)
 {
-	return NULL;
+	return JsString_FromStringAndSize(str, strlen(str));
 }
 
 char * JsString_GetCString(JsObject *obj)
 {
-	return NULL;
+	JsStringObject *v;
+	if (obj && JsString_CheckType(obj))
+	{
+		v = (JsStringObject *)obj;
+		return v->ob_sval;
+	}
+	if (obj == NULL || !JsString_CheckCast(obj))
+	{
+		dbgprint("Invalid type in deallocation of stringobject\n");
+		// TODO: ?return sth?
+		return NULL;
+	}
+	// when to release?
+	v = (JsStringObject *)(Js_Type(obj)->tp_tostr(obj));
+	return v->ob_sval;
 }
+
 
 static void
 string_dealloc(JsStringObject *obj)
@@ -125,19 +170,29 @@ _JsString_Init(void)
 {
 	int i;
 	JsStringObject *v, *w;
+	size_t charPoolSize = (sizeof(JsStringObject)+1) * CHAROBJECT_MAX;//len=1 
+
 	// nullstring
-	v = malloc(sizeof(JsStringObject));
-	w = malloc( (sizeof(JsStringObject)+1) * CHAROBJECT_MAX );//len=1 
-	if (v == NULL || w == NULL)
+	v = malloc(charPoolSize);
+
+	if (v == NULL)
 	{
 		dbgprint("Initialization of stringobject failed");
 		return -1;
 	}
+
+	memset(v, 0, charPoolSize);
+
+	// initialization of ""
+	JsObject_INIT_VAR(v, &JsString_Type, 0);
 	nullstring = v;
-	// TODO - initialization!
-	for (i = 0; i < CHAROBJECT_MAX; ++i)
+
+	// initialization of 
+	for (i=1, w=v+1; i<=CHAROBJECT_MAX; ++i, ++w)
 	{
-		characters[i] = w + i;
+		JsObject_INIT_VAR(w, &JsString_Type, 1);
+		*(w->ob_sval) = i;
+		characters[i] = w;
 	}
 	return 0;
 }
@@ -147,6 +202,4 @@ _JsString_Deinit(void)
 {
 	if (nullstring != NULL)
 		free(nullstring);
-	if (characters[0] != NULL)
-		free(characters[0]);
 }
