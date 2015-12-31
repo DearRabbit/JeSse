@@ -11,11 +11,10 @@ extern JsStringObject *nullstring;
 int main()
 {
 	_JsString_Init();
-	JsStringObject *v = JsString_FromString("nullstring");
-
-	printf("%s\n", JsString_GetCString(characters['a']) );
+	JsStringObject *v = JsString_FromString("123");
+	int w = JsInt_GetLong(v);
 	
-	printf("%s\n", JsString_GetCString(v) );
+	printf("%d\n", w );
 
 	Js_DECREF(v);
 	_JsString_Deinit();

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdlib.h>
-
 #include "object.h"
 
 typedef struct {
@@ -10,6 +8,7 @@ typedef struct {
 } JsIntObject;
 
 extern JsTypeObject JsInt_Type;
+extern int errno_int;
 
 #define JsInt_CheckType(obj) ((obj)->ob_type == &JsInt_Type)
 #define JsInt_CheckCast(obj) (Js_Type(obj)->tp_flags&JS_TPFLAGS_INT_CAST)

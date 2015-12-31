@@ -22,8 +22,8 @@ JsTypeObject JsType_Type =
 
 	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE,	/* tp_new */
 
-	type_new,					/* tp_new */
-	(destructor)type_dealloc,	/* tp_dealloc */
+	NULL,						/* tp_new */
+	NULL,						/* tp_dealloc */
 	NULL,						/* tp_print */
 	NULL,						/* tp_tostr */
 

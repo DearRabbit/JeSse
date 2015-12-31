@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "runtime.h"
 
 #ifndef NSMALLPOSINTS
@@ -55,8 +57,18 @@ JsInt_GetLong(JsObject *obj)
 		dbgprint("Invalid type in deallocation of intobject\n");
 		return -1;
 	}
-	//TODO: Mostly a string, add implement: atol
-	return 0;
+	if (JsString_CheckType(obj))
+	{
+		char *endptr;
+		long ret = strtol(JsString_AS_CSTRING(obj), &endptr, 0);
+		if (*endptr != 0)
+		{
+			errno_int = -1;
+			return -1;
+		}
+		return ret;
+	}
+	return -1;
 }
 
 // methods
@@ -97,9 +109,7 @@ int_to_decimal_string(JsIntObject *v)
     } while (absn);
     if (n < 0)
         *--p = '-';
-    // TODO:
-    //return JsString_FromStringAndSize(p, bufend - p);
-    return NULL;
+    return JsString_FromStringAndSize(p, bufend - p);
 }
 
 static int
@@ -118,6 +128,8 @@ int_hash(JsIntObject *v)
 		x = -2;
 	return x;
 }
+
+int errno_int;
 
 JsTypeObject JsInt_Type =
 {
