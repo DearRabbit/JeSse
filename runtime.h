@@ -9,3 +9,5 @@ void _JsInt_Deinit(void);
 
 int _JsString_Init(void);
 void _JsString_Deinit(void);
+
+JsObject * JsRtErr_NoMemory(void);
