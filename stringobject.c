@@ -36,7 +36,7 @@ JsObject* JsString_FromStringAndSize(const char *str, size_t size)
 		return JsRtErr_NoMemory();
 	}
 	JsObject_INIT_VAR(op, &JsString_Type, size);
-	op->ob_shash = -1;
+	op->ob_shash = 0;
 	if (str != NULL)
 		memcpy(op->ob_sval, str, size);
 	op->ob_sval[size] = '\0';
@@ -122,28 +122,25 @@ string_hash(JsStringObject *a)
 {
     register ssize_t len;
     register unsigned char *p;
-    register u64 x;
+    register u64 x = 0;
 
-    if (a->ob_shash != -1)
+    if (a->ob_shash != 0)
         return a->ob_shash;
     len = Js_Size(a);
-    /*
-      We make the hash of the empty string be 0, rather than using
-      (prefix ^ suffix), since this slightly obfuscates the hash secret
-    */
+
     if (len == 0) {
         a->ob_shash = 0;
         return 0;
     }
     p = (unsigned char *) a->ob_sval;
-    x = HashSecretPartA;
-    x ^= *p << 7;
+
+    /*
+    	Like Java, the hashcode is:
+		s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]
+    */
     while (--len >= 0)
-        x = (1000003*x) ^ *p++;
-    x ^= Js_Size(a);
-    x ^= HashSecretPartB;
-    if (x == -1)
-        x = -2;
+        x = (31*x) + *(p++);
+
     a->ob_shash = x;
     return x;
 }
