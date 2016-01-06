@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 #define JS_DEBUG
 
@@ -15,3 +16,6 @@
 	exit(-1)
 
 #define CHAR_BIT 8
+
+typedef u64 uint64_t
+typedef u32 uint32_t
