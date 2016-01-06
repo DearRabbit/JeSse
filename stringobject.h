@@ -20,7 +20,7 @@ typedef struct {
 extern JsTypeObject JsString_Type;
 
 #define JsString_CheckType(obj) ((obj)->ob_type == &JsString_Type)
-#define JsString_CheckCast(obj) (Js_Type(obj)->tp_tostr != NULL)
+// #define JsString_CheckCast(obj) (Js_Type(obj)->tp_tostr != NULL)
 
 // C - API
 // unsafe?

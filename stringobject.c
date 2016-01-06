@@ -117,12 +117,12 @@ string_compare(JsStringObject *v, JsStringObject *w)
 	#define HashSecretPartB 0x3a7034f7L
 #endif
 
-static long
+static u64
 string_hash(JsStringObject *a)
 {
     register ssize_t len;
     register unsigned char *p;
-    register long x;
+    register u64 x;
 
     if (a->ob_shash != -1)
         return a->ob_shash;
@@ -157,8 +157,7 @@ JsTypeObject JsString_Type = {
 	sizeof(JsStringObject),
 	sizeof(char),
 
-	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE |
-		JS_TPFLAGS_INT_CAST,			/* weak cast to int */
+	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE ,
 
 	NULL,								/* no new func, generate by api*/
 	(destructor)string_dealloc,			/* tp_dealloc */

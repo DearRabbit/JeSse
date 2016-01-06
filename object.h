@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdio.h>
-#include "utility.h"
+#include "utils.h"
 
 #define JsObject_HEAD				\
 	ssize_t ob_refcnt;				\
@@ -68,13 +68,13 @@ typedef int (*printfunc)(JsObject *obj, FILE *fp);
 typedef JsObject* (*tostringfunc)(JsObject *obj);
 // return neg if i<j, pos if i>j, 0 if equals
 typedef int (*cmpfunc)(JsObject *obja, JsObject *objb);
-typedef long (*hashfunc)(JsObject *obj);
+typedef u64 (*hashfunc)(JsObject *obj);
 
 // TODO: Type Flags List: add more?
 #define JS_TPFLAGS_DEFAULT			(1L<<0)
 #define JS_TPFLAGS_BASETYPE			(1L<<10)
 
-#define JS_TPFLAGS_INT_CAST			(1L<<23)
+// #define JS_TPFLAGS_INT_CAST			(1L<<23)
 
 // Object - define:
 // TypeObject
@@ -102,10 +102,10 @@ typedef struct _typeobject {
 
 // basic typeobj
 extern JsTypeObject JsType_Type;
-extern JsTypeObject JsBaseObject_Type; 
+// extern JsTypeObject JsBaseObject_Type; 
 
 // common hash function
-long _Js_HashPointer(void*);
+u64 _Js_HashPointer(void*);
 
 #define JsType_CheckType(obj) ((obj)->ob_type == &JsTypeObject)
 

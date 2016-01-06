@@ -20,7 +20,7 @@ JsTypeObject JsType_Type =
 	sizeof(JsTypeObject),
 	0,
 
-	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE,	/* tp_new */
+	JS_TPFLAGS_DEFAULT,
 
 	NULL,						/* tp_new */
 	NULL,						/* tp_dealloc */
