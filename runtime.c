@@ -1,8 +1,15 @@
 #include "runtime.h"
 
-JsObject *
-JsRtErr_NoMemory(void)
+#include <stdlib.h>
+
+// Error On Exit, never return NULL
+void*
+Js_Malloc(size_t len)
 {
-	dbgprint("Not enough memory");
-	return NULL;
+	void *space = malloc(len);
+	if (space == NULL)
+	{
+		Js_FatalError("Not enough memory");
+	}
+	return space;
 }

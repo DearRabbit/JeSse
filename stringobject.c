@@ -30,11 +30,7 @@ JsObject* JsString_FromStringAndSize(const char *str, size_t size)
 		return (JsObject *)op;
 	}
 
-	op = (JsStringObject *)malloc(sizeof(JsStringObject) + size);
-	if (op == NULL)
-	{
-		return JsRtErr_NoMemory();
-	}
+	op = (JsStringObject *)Js_Malloc(sizeof(JsStringObject) + size);
 	JsObject_INIT_VAR(op, &JsString_Type, size);
 	op->ob_shash = 0;
 	if (str != NULL)
@@ -57,9 +53,9 @@ char * JsString_GetCString(JsObject *obj)
 		v = (JsStringObject *)obj;
 		return v->ob_sval;
 	}
-	if (obj == NULL || !JsString_CheckCast(obj))
+	if (obj == NULL)
 	{
-		dbgprint("Invalid type in deallocation of stringobject\n");
+		dbgprint("NullPointer in JsString_GetCString\n");
 		// TODO: ?return sth?
 		return NULL;
 	}
@@ -75,7 +71,7 @@ string_dealloc(JsStringObject *obj)
 	if (JsString_CheckType(obj))
 		free(obj);
 	else
-		dbgprint("Invalid type '%s' in deallocation of stringobject\n", Js_Type(obj)->tp_name);
+		dbgprint("Invalid type in deallocation of stringobject\n");
 }
 
 static int

@@ -33,21 +33,17 @@ JsObject *
 JsNum_FromDouble(double dval)
 {
 	register JsNumObject *v;
-	long ival = dval;
 
 #if NSMALLNEGINTS + NSMALLPOSINTS > 0
-	if (-NSMALLNEGINTS <= ival && ival < NSMALLPOSINTS) {
+	long ival = dval;
+	if (ival == dval && -NSMALLNEGINTS <= ival && ival < NSMALLPOSINTS) {
 		v = small_ints[ival + NSMALLNEGINTS];
 		Js_INCREF(v);
 		return (JsObject *) v;
 	}
 #endif
 
-	v = malloc(sizeof(JsNumObject));
-	if (v == NULL)
-	{
-		return JsRtErr_NoMemory();
-	}
+	v = Js_Malloc(sizeof(JsNumObject));
 	JsObject_INIT(v, &JsNum_Type);
 	v->ob_ival = dval;
 	return (JsObject *) v;
@@ -56,15 +52,15 @@ JsNum_FromDouble(double dval)
 double
 JsNum_GetDouble(JsObject *obj)
 {
-	/*
-	if (obj && JsInt_CheckType(obj))
+	if (obj && JsNum_CheckType(obj))
 	{
 		return ((JsNumObject *)obj)->ob_ival;
 	}
-	if (obj == NULL || !JsInt_CheckCast(obj))
+	if (obj == NULL)
 	{
 		dbgprint("Invalid type in deallocation of intobject\n");
-		return -1;
+		errnoInNum = JsException_NullPtrError;
+		return 0;
 	}
 	if (JsString_CheckType(obj))
 	{
@@ -72,13 +68,13 @@ JsNum_GetDouble(JsObject *obj)
 		long ret = strtol(JsString_AS_CSTRING(obj), &endptr, 0);
 		if (*endptr != 0)
 		{
-			errno_int = -1;
-			return -1;
+			errnoInNum = JsException_ParseError;
+			return 0;
 		}
 		return ret;
 	}
-	return -1;
-	*/
+	errnoInNum = JsException_ParseError;
+	return 0;
 }
 
 // methods
@@ -95,17 +91,8 @@ num_dealloc(JsNumObject *obj)
 static void
 _num_internal_tocstring(JsNumObject *v, char* buffer)
 {
-	double fval = v->ob_ival;
-	long intval;
-
-	if (fval == intval)
-	{
-
-	}
-	else
-	{
-
-	}
+	// double fval = v->ob_ival;
+	sprintf(buffer, "%g", v->ob_ival);
 }
 
 static int
@@ -128,8 +115,8 @@ num_tostring(JsNumObject *v)
 static int
 num_compare(JsNumObject *v, JsNumObject *w)
 {
-	double i = v->ob_ival;
-	double j = w->ob_ival;
+	register double i = v->ob_ival;
+	register double j = w->ob_ival;
 	return (i < j) ? -1 : (i > j) ? 1 : 0;
 }
 
@@ -175,7 +162,6 @@ _JsNum_Init(void)
     }
     for (ival = -NSMALLNEGINTS; ival < NSMALLPOSINTS; ival++, v++) {
 		JsObject_INIT(v, &JsNum_Type);
-		JsNum_SetInt(v);
 		v->ob_ival = ival;
 		small_ints[ival + NSMALLNEGINTS] = v;
 	}
