@@ -72,17 +72,7 @@ _JsBool_Init(void)
 	JsObject *v, *w;
 
 	v = JsString_FromString(VAR_BOOL_TRUE);
-	if (v == NULL)
-	{
-		dbgprint("Initialization of boolobject failed");
-		return -1;
-	}
 	w = JsString_FromString(VAR_BOOL_FALSE);
-	if (w == NULL)
-	{
-		dbgprint("Initialization of boolobject failed");
-		return -1;
-	}
 
 	true_str = v;
 	false_str = w;
@@ -93,11 +83,10 @@ _JsBool_Init(void)
 void
 _JsBool_Deinit(void)
 {
-	if (true_str != NULL && false_str != NULL)
-	{
+	if (true_str != NULL)
 		free(true_str);
+	if (false_str != NULL)
 		free(false_str);
-	}
 }
 
 JsBoolObject _Js_FalseStruct = {

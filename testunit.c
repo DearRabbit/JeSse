@@ -15,8 +15,8 @@ int main()
 {
 	_JsBool_Init();
 
-	JsStringObject* a = JsString_FromString("hahahah");
-	JsStringObject* b = JsString_FromString("hahahah");
+	JsObject* a = JsString_FromString("hahahah");
+	JsObject* b = JsString_FromString("hahahah");
 	PRINTOBJ(a);
 
 	printf("%d\n", _JsString_Eq(a, b));

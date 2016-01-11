@@ -5,6 +5,8 @@
 #define VAR_NULL_STRING "null"
 #define VAR_UNDEF_STRING "undefined"
 
+JsObject* _Js_TempVarName[_JsTempVarName_Max];
+
 // Error On Exit, never return NULL
 void*
 Js_Malloc(size_t len)
@@ -34,22 +36,22 @@ int
 _JsDefaultVar_Init(void)
 {
 	JsObject *v, *w;
+	int i;
+	char tmp_varName[3] = {0};
 
 	v = JsString_FromString(VAR_NULL_STRING);
-	if (v == NULL)
-	{
-		dbgprint("Initialization of runtime environment failed");
-		return -1;
-	}
 	w = JsString_FromString(VAR_UNDEF_STRING);
-	if (w == NULL)
-	{
-		dbgprint("Initialization of runtime environment failed");
-		return -1;
-	}
 
 	null_str = v;
 	undef_str = w;
+
+	// for 0 ~ _JsTempVarName_Max, naming '$0'-'$x'
+	tmp_varName[0] = '$';
+	for (i = 0; i < _JsTempVarName_Max; ++i)
+	{
+		tmp_varName[1] = '0' + i;
+		_Js_TempVarName[i] = JsString_FromString(tmp_varName);
+	}
 
 	return 0;
 }
@@ -57,10 +59,16 @@ _JsDefaultVar_Init(void)
 void
 _JsDefaultVar_Deinit(void)
 {
-	if (null_str != NULL && undef_str != NULL)
-	{
+	int i;
+	if (null_str != NULL)
 		free(null_str);
+	if (undef_str != NULL)
 		free(undef_str);
+
+	for (i = 0; i < _JsTempVarName_Max; ++i)
+	{
+		if (_Js_TempVarName[i] != NULL)
+			free(_Js_TempVarName[i]);
 	}
 }
 
