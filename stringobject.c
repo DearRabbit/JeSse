@@ -8,10 +8,8 @@
 
 // nullstring is the first element of characters
 #ifdef JS_DEBUG
-	JsStringObject *characters[CHAROBJECT_MAX + 1];
 	JsStringObject *nullstring;
 #else
-	static JsStringObject *characters[CHAROBJECT_MAX + 1];
 	static JsStringObject *nullstring;
 #endif
 
@@ -19,12 +17,6 @@ JsObject* JsString_FromStringAndSize(const char *str, size_t size)
 {
 	register JsStringObject *op;
 	if (size == 0 && (op = nullstring) != NULL) 
-	{
-		Js_INCREF(op);
-		return (JsObject *)op;
-	}
-	if (size == 1 && str != NULL &&
-        (op = characters[*str & CHAROBJECT_MAX]) != NULL)
 	{
 		Js_INCREF(op);
 		return (JsObject *)op;
@@ -64,29 +56,26 @@ char * JsString_GetCString(JsObject *obj)
 	return v->ob_sval;
 }
 
+int
+_JsString_Eq(JsObject *o1, JsObject *o2)
+{
+    JsStringObject *a = (JsStringObject*) o1;
+    JsStringObject *b = (JsStringObject*) o2;
+    return Js_Size(a) == Js_Size(b)
+      && memcmp(a->ob_sval, b->ob_sval, Js_Size(a)) == 0;
+}
 
 static void
 string_dealloc(JsStringObject *obj)
 {
-	if (JsString_CheckType(obj))
-		free(obj);
-	else
-		dbgprint("Invalid type in deallocation of stringobject\n");
+	Js_Free(obj);
 }
 
 static int
 string_print(JsStringObject *obj, FILE *fp)
 {
-	// unlike int, mismatch of type could cause alot problems.
-	if (JsString_CheckType(obj))
-	{
-		return fprintf(fp, "%s\n", obj->ob_sval);
-	}
-	else
-	{
-		dbgprint("unable to print '%s'\n", Js_Type(obj)->tp_name);
-		return -1;
-	}
+	// unlike number, mismatch of type could cause alot problems.
+	return fprintf(fp, "%s", obj->ob_sval);
 }
 
 static JsObject *
@@ -105,7 +94,8 @@ string_compare(JsStringObject *v, JsStringObject *w)
 }
 
 /* MD5 (LICENSE) = 16de24d23a7034f7bf177e92c2d3d57c */
-#if (2147483647L + 1L > 0)
+//#if (2147483647L + 1L > 0)
+#if HASH_AS_LONG
 	#define HashSecretPartA 0x16de24d2bf177e92L
 	#define HashSecretPartB 0x3a7034f7c2d3d57cL
 #else
@@ -113,12 +103,12 @@ string_compare(JsStringObject *v, JsStringObject *w)
 	#define HashSecretPartB 0x3a7034f7L
 #endif
 
-static u64
+static uhash
 string_hash(JsStringObject *a)
 {
     register ssize_t len;
     register unsigned char *p;
-    register u64 x = 0;
+    register uhash x = 0;
 
     if (a->ob_shash != 0)
         return a->ob_shash;
@@ -146,7 +136,7 @@ string_hash(JsStringObject *a)
 */
 JsTypeObject JsString_Type = {
 	JsObject_HEAD_INIT(&JsType_Type)
-	"str",
+	"string",
 	sizeof(JsStringObject),
 	sizeof(char),
 
@@ -165,11 +155,8 @@ int
 _JsString_Init(void)
 {
 	int i;
-	JsStringObject *v, *w;
-	size_t charPoolSize = (sizeof(JsStringObject)+1) * CHAROBJECT_MAX;//len=1 
-
-	// nullstring
-	v = malloc(charPoolSize);
+	JsStringObject *v;
+	v = malloc(sizeof(JsStringObject));
 
 	if (v == NULL)
 	{
@@ -177,19 +164,11 @@ _JsString_Init(void)
 		return -1;
 	}
 
-	memset(v, 0, charPoolSize);
-
-	// initialization of ""
+	// initialization of nullstring
 	JsObject_INIT_VAR(v, &JsString_Type, 0);
+	*(v->ob_sval) = 0;
 	nullstring = v;
 
-	// initialization of 
-	for (i=1, w=v+1; i<=CHAROBJECT_MAX; ++i, ++w)
-	{
-		JsObject_INIT_VAR(w, &JsString_Type, 1);
-		*(w->ob_sval) = i;
-		characters[i] = w;
-	}
 	return 0;
 }
 

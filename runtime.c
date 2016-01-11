@@ -13,3 +13,10 @@ Js_Malloc(size_t len)
 	}
 	return space;
 }
+
+void 
+Js_Free(void* ptr)
+{
+	if (ptr != NULL)
+		free(ptr);
+}

@@ -46,10 +46,10 @@ typedef struct {
 #define Js_INCREF(obj)								\
     (((JsObject*)(obj))->ob_refcnt++)
 #define Js_DECREF(obj)								\
-	{												\
+	do {											\
 		if (--((JsObject*)(obj))->ob_refcnt == 0)	\
 			_Js_Dealloc(obj);						\
-	}
+	}while(0)
 
 // typedef - function ptr groups:
 // operators
@@ -68,7 +68,7 @@ typedef int (*printfunc)(JsObject *obj, FILE *fp);
 typedef JsObject* (*tostringfunc)(JsObject *obj);
 // return neg if i<j, pos if i>j, 0 if equals
 typedef int (*cmpfunc)(JsObject *obja, JsObject *objb);
-typedef u64 (*hashfunc)(JsObject *obj);
+typedef uhash (*hashfunc)(JsObject *obj);
 
 // TODO: Type Flags List: add more?
 #define JS_TPFLAGS_DEFAULT			(1L<<0)
@@ -105,7 +105,7 @@ extern JsTypeObject JsType_Type;
 // extern JsTypeObject JsBaseObject_Type; 
 
 // common hash function
-u64 _Js_HashPointer(void*);
+uhash _Js_HashPointer(void*);
 
 #define JsType_CheckType(obj) ((obj)->ob_type == &JsTypeObject)
 

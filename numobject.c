@@ -82,10 +82,7 @@ JsNum_GetDouble(JsObject *obj)
 static void
 num_dealloc(JsNumObject *obj)
 {
-	if (JsNum_CheckType(obj))
-		free(obj);
-	else
-		dbgprint("Invalid type in deallocation of numobject\n");
+	Js_Free(obj);
 }
 
 static void
@@ -120,11 +117,16 @@ num_compare(JsNumObject *v, JsNumObject *w)
 	return (i < j) ? -1 : (i > j) ? 1 : 0;
 }
 
-static u64
+static uhash
 num_hash(JsNumObject *v)
 {
-	u64* xptr = &(v->ob_ival);
-	return *xptr;
+	u64 xlong = *((u64*)&(v->ob_ival));
+#if HASH_AS_LONG
+	return (uhash)xlong;
+#else
+	uhash ret = (uhash)(xlong ^ (xlong>>32));
+	return ret;
+#endif
 }
 
 int errnoInNum;

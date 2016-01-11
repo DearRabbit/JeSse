@@ -21,6 +21,9 @@ stringobject.o: stringobject.c
 boolobject.o: boolobject.c
 	$(CC) $(DBGFLAGS) -c $^
 
+dictobject.o: dictobject.c
+	$(CC) $(DBGFLAGS) -c $^
+
 typeobject.o: typeobject.c
 	$(CC) $(DBGFLAGS) -c $^
 
@@ -28,7 +31,7 @@ runtime.o: runtime.c
 	$(CC) $(DBGFLAGS) -c $^
 	
 
-test: object.o typeobject.o numobject.o stringobject.o boolobject.o runtime.o testunit.o 
+test: object.o typeobject.o numobject.o stringobject.o boolobject.o dictobject.o runtime.o testunit.o 
 	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $(TEST_TARGET)
 
 testunit.o: testunit.c

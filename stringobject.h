@@ -4,7 +4,7 @@
 
 typedef struct {
 	JsObject_VAR_HEAD
-	u64 ob_shash;
+	int ob_shash;
 	char ob_sval[1];
 
     /* Invariants:
@@ -26,6 +26,9 @@ extern JsTypeObject JsString_Type;
 JsObject* JsString_FromStringAndSize(const char *, size_t);
 JsObject* JsString_FromString(const char *);
 char * JsString_GetCString(JsObject *);
+
+// use in dict for speed
+int _JsString_Eq(JsObject *, JsObject *);
 
 // for speed
 #define JsString_AS_CSTRING(op) (((JsStringObject *)(op))->ob_sval)

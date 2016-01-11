@@ -5,8 +5,10 @@
 #include "stringobject.h"
 #include "boolobject.h"
 
+#include "dictobject.h"
+
 typedef struct _freelist{
-	JsObject *obj;
+	void *ptr;
 	struct _freelist* next;
 } JsFreeList;
 
@@ -20,5 +22,9 @@ void _JsNum_Deinit(void);
 int _JsString_Init(void);
 void _JsString_Deinit(void);
 
+int _JsBool_Init(void);
+void _JsBool_Deinit(void);
+
 // Exit on error, never return NULL
-void* Js_Malloc(size_t len);
+void* Js_Malloc(size_t);
+void Js_Free(void*);

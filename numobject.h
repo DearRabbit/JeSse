@@ -12,10 +12,6 @@ extern int errnoInNum;
 
 #define JsNum_CheckType(obj) ((obj)->ob_type == &JsNum_Type)
 
-// #define JsNum_SetInt(obj) (((JsNumObject *)(obj))->int_flag = 1)
-// #define JsNum_SetFloat(obj) (((JsNumObject *)(obj))->int_flag = 0)
-// #define JsNum_GetIntFlag(obj) (((JsNumObject *)(obj))->int_flag)
-
 // C - API
 JsObject* JsNum_FromDouble(double);
 double JsNum_GetDouble(JsObject *);

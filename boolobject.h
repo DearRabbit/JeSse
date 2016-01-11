@@ -17,5 +17,5 @@ extern JsBoolObject _Js_TrueStruct;
 #define JsBool_CheckType(obj) ((obj)->ob_type == &JsBool_Type)
 
 JsObject* JsBool_FromInt(int);
-int JsNum_GetBool(JsObject *);
+int JsBool_GetBool(JsObject *);
 
