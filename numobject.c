@@ -61,7 +61,7 @@ JsNum_GetDouble(JsObject *obj)
 	{
 		dbgprint("Invalid type in deallocation of intobject\n");
 		errnoInNum = JsException_NullPtrError;
-		return 0;
+		return NAN;
 	}
 	if (JsString_CheckType(obj))
 	{
@@ -76,6 +76,14 @@ JsNum_GetDouble(JsObject *obj)
 	}
 	errnoInNum = JsException_ParseError;
 	return NAN;
+}
+
+int
+JsNum_GetInt(JsObject *obj)
+{
+	double dval = JsNum_GetDouble(obj);
+
+	return (int)dval;
 }
 
 // methods

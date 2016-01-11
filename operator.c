@@ -5,8 +5,9 @@ op_add(JsObject* v, JsObject* w)
 {
 	if (JsNum_CheckType(v) && JsNum_CheckType(w))
 	{
-		double op1 = JsNum_GetDouble(v);
-		double op2 = JsNum_GetDouble(w);
+		// for faster access...
+		double op1 = JsNum_AS_DOUBLE(v);
+		double op2 = JsNum_AS_DOUBLE(w);
 		double result = op1 + op2;
 
 		return JsNum_FromDouble(result);
@@ -50,4 +51,35 @@ op_div(JsObject* v, JsObject* w)
 	double result = op1 / op2;
 
 	return JsNum_FromDouble(result);
+}
+
+// use int for logic operation
+JsObject* 
+op_and(JsObject* v, JsObject* w)
+{
+	int op1 = JsNum_GetInt(v);
+	int op2 = JsNum_GetInt(w);
+	int result = op1 & op2;
+
+	return JsNum_FromDouble((double)result);
+}
+
+JsObject* 
+op_or(JsObject* v, JsObject* w)
+{
+	int op1 = JsNum_GetInt(v);
+	int op2 = JsNum_GetInt(w);
+	int result = op1 | op2;
+
+	return JsNum_FromDouble((double)result);
+}
+
+JsObject* 
+op_xor(JsObject* v, JsObject* w)
+{
+	int op1 = JsNum_GetInt(v);
+	int op2 = JsNum_GetInt(w);
+	int result = op1 ^ op2;
+
+	return JsNum_FromDouble((double)result);
 }

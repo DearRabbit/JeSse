@@ -15,6 +15,7 @@ extern int errnoInNum;
 // C - API
 JsObject* JsNum_FromDouble(double);
 double JsNum_GetDouble(JsObject *);
+int JsNum_GetInt(JsObject *);
 
 // macro access for speed?
 #define JsNum_AS_DOUBLE(obj) (((JsNumObject *)(obj))->ob_ival)
