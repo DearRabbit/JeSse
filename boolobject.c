@@ -3,6 +3,9 @@
 
 #include "runtime.h"
 
+#define VAR_BOOL_TRUE "true"
+#define VAR_BOOL_FALSE "false"
+
 static JsObject *true_str;
 static JsObject *false_str;
 
@@ -28,7 +31,7 @@ JsBool_GetBool(JsObject *obj)
 static int
 bool_print(JsBoolObject *obj, FILE *fp)
 {
-	fputs(obj->ob_ival == 0 ? "false" : "true", fp);
+	fputs(obj->ob_ival == 0 ? VAR_BOOL_FALSE : VAR_BOOL_TRUE, fp);
 	return 0;
 }
 
@@ -63,35 +66,26 @@ JsTypeObject JsBool_Type =
 	NULL,								/* tp_hash */
 };
 
-#define LEN_OF_TRUE 4
-#define LEN_OF_FALSE 5
-
 int
 _JsBool_Init(void)
 {
-	JsStringObject *v, *w;
+	JsObject *v, *w;
 
-	v = malloc(sizeof(JsStringObject) + LEN_OF_TRUE);
+	v = JsString_FromString(VAR_BOOL_TRUE);
 	if (v == NULL)
 	{
 		dbgprint("Initialization of boolobject failed");
 		return -1;
 	}
-	w = malloc(sizeof(JsStringObject) + LEN_OF_FALSE);
+	w = JsString_FromString(VAR_BOOL_FALSE);
 	if (w == NULL)
 	{
 		dbgprint("Initialization of boolobject failed");
 		return -1;
 	}
 
-	JsObject_INIT_VAR(v, &JsString_Type, LEN_OF_TRUE);
-	JsObject_INIT_VAR(w, &JsString_Type, LEN_OF_FALSE);
-
-	strcpy(v->ob_sval, "true");
-	strcpy(w->ob_sval, "false");
-
-	true_str = (JsObject*)v;
-	false_str = (JsObject*)w;
+	true_str = v;
+	false_str = w;
 
 	return 0;
 }
