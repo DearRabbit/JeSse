@@ -7,6 +7,8 @@
 
 #include "dictobject.h"
 
+#include "operator.h"
+
 typedef struct _freelist{
 	void *ptr;
 	struct _freelist* next;
@@ -20,6 +22,9 @@ extern JsTypeObject JsUndef_Type;
 
 extern JsNullObject _Js_NullStruct;
 extern JsUndefObject _Js_UndefStruct;
+
+#define Js_Null ((JsObject *) &_Js_NullStruct)
+#define Js_Undefined ((JsObject *) &_Js_UndefStruct)
 
 #define _JsTempVarName_Max 8
 extern JsObject* _Js_TempVarName[_JsTempVarName_Max];

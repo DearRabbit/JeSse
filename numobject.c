@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <math.h>
 
 #include "runtime.h"
 
@@ -65,16 +66,16 @@ JsNum_GetDouble(JsObject *obj)
 	if (JsString_CheckType(obj))
 	{
 		char *endptr;
-		long ret = strtol(JsString_AS_CSTRING(obj), &endptr, 0);
+		double ret = strtod(JsString_AS_CSTRING(obj), &endptr);
 		if (*endptr != 0)
 		{
 			errnoInNum = JsException_ParseError;
-			return 0;
+			return NAN;
 		}
 		return ret;
 	}
 	errnoInNum = JsException_ParseError;
-	return 0;
+	return NAN;
 }
 
 // methods

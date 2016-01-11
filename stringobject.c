@@ -13,7 +13,8 @@
 	static JsStringObject *nullstring;
 #endif
 
-JsObject* JsString_FromStringAndSize(const char *str, size_t size)
+JsObject*
+JsString_FromStringAndSize(const char *str, size_t size)
 {
 	register JsStringObject *op;
 	if (size == 0 && (op = nullstring) != NULL) 
@@ -32,36 +33,76 @@ JsObject* JsString_FromStringAndSize(const char *str, size_t size)
 	return (JsObject *) op;
 }
 
-JsObject* JsString_FromString(const char *str)
+JsObject*
+JsString_FromString(const char *str)
 {
 	return JsString_FromStringAndSize(str, strlen(str));
 }
 
-char * JsString_GetCString(JsObject *obj)
+JsObject*
+JsString_GetString(JsObject *obj)
 {
-	JsStringObject *v;
+	JsObject *v;
 	if (obj && JsString_CheckType(obj))
 	{
-		v = (JsStringObject *)obj;
-		return v->ob_sval;
+		return obj;
 	}
 	if (obj == NULL)
 	{
 		dbgprint("NullPointer in JsString_GetCString\n");
-		// TODO: ?return sth?
-		return NULL;
+		return Js_Null;
 	}
 	// when to release?
-	v = (JsStringObject *)(Js_Type(obj)->tp_tostr(obj));
-	return v->ob_sval;
+	v = (Js_Type(obj)->tp_tostr(obj));
+	return v;
+}
+
+char *
+JsString_GetCString(JsObject *obj)
+{
+	JsObject *v = (JsObject*)JsString_GetString(obj);
+	if (v != Js_Null)
+		return JsString_AS_CSTRING(v);
+	else
+		return "null";
+}
+
+JsObject*
+_JsString_StringJoin(JsObject *v, JsObject *w)
+{
+	char *a = JsString_AS_CSTRING(v);
+	char *b = JsString_AS_CSTRING(w);
+
+	size_t len_a = strlen(a);
+	size_t size = len_a + strlen(b);
+
+	JsStringObject *op;
+
+	if (size == 0 && (op = nullstring) != NULL) 
+	{
+		Js_INCREF(op);
+		return (JsObject *)op;
+	}
+
+	op = (JsStringObject *)Js_Malloc(sizeof(JsStringObject) + size);
+	JsObject_INIT_VAR(op, &JsString_Type, size);
+	op->ob_shash = 0;
+	if (a != NULL && b != NULL)
+	{
+		memcpy(op->ob_sval, a, len_a);
+		strcat(op->ob_sval, b);
+	}
+	op->ob_sval[size] = '\0';
+
+	return (JsObject *) op;
 }
 
 int
 _JsString_Eq(JsObject *o1, JsObject *o2)
 {
-    JsStringObject *a = (JsStringObject*) o1;
-    JsStringObject *b = (JsStringObject*) o2;
-    return Js_Size(a) == Js_Size(b)
+	JsStringObject *a = (JsStringObject*) o1;
+	JsStringObject *b = (JsStringObject*) o2;
+	return Js_Size(a) == Js_Size(b)
       && memcmp(a->ob_sval, b->ob_sval, Js_Size(a)) == 0;
 }
 

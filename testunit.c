@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "runtime.h"
 
@@ -15,11 +16,11 @@ int main()
 {
 	_JsBool_Init();
 
-	JsObject* a = JsString_FromString("hahahah");
-	JsObject* b = JsString_FromString("hahahah");
-	PRINTOBJ(a);
+	JsObject* a = JsString_FromString("dsa");
+	JsObject* b = JsString_FromString("jsjs");
 
-	printf("%d\n", _JsString_Eq(a, b));
+	JsObject* c = op_add(a, b);
+	PRINTOBJ(c);
 
 	_JsBool_Deinit();
 

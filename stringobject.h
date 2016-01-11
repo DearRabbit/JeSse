@@ -25,7 +25,10 @@ extern JsTypeObject JsString_Type;
 // unsafe?
 JsObject* JsString_FromStringAndSize(const char *, size_t);
 JsObject* JsString_FromString(const char *);
+JsObject* JsString_GetString(JsObject *);
 char * JsString_GetCString(JsObject *);
+
+JsObject* _JsString_StringJoin(JsObject *, JsObject *);
 
 // use in dict for speed
 int _JsString_Eq(JsObject *, JsObject *);

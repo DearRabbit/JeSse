@@ -27,11 +27,15 @@ dictobject.o: dictobject.c
 typeobject.o: typeobject.c
 	$(CC) $(DBGFLAGS) -c $^
 
+operator.o: operator.c
+	$(CC) $(DBGFLAGS) -c $^
+
 runtime.o: runtime.c
 	$(CC) $(DBGFLAGS) -c $^
 	
 
-test: object.o typeobject.o numobject.o stringobject.o boolobject.o dictobject.o runtime.o testunit.o 
+test: object.o typeobject.o numobject.o stringobject.o boolobject.o\
+	dictobject.o operator.o runtime.o testunit.o 
 	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $(TEST_TARGET)
 
 testunit.o: testunit.c
