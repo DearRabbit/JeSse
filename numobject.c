@@ -121,7 +121,7 @@ static uhash
 num_hash(JsNumObject *v)
 {
 	u64 xlong = *((u64*)&(v->ob_ival));
-#if HASH_AS_LONG
+#ifdef HASH_AS_LONG
 	return (uhash)xlong;
 #else
 	uhash ret = (uhash)(xlong ^ (xlong>>32));

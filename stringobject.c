@@ -95,7 +95,7 @@ string_compare(JsStringObject *v, JsStringObject *w)
 
 /* MD5 (LICENSE) = 16de24d23a7034f7bf177e92c2d3d57c */
 //#if (2147483647L + 1L > 0)
-#if HASH_AS_LONG
+#ifdef HASH_AS_LONG
 	#define HashSecretPartA 0x16de24d2bf177e92L
 	#define HashSecretPartB 0x3a7034f7c2d3d57cL
 #else
