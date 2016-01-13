@@ -218,5 +218,5 @@ _JsString_Deinit(void)
 static JsStringObject _Js_Nullstring = {
 	JsVarObject_HEAD_INIT(&JsString_Type, 0)
 	0,
-	0
+	{0}
 };

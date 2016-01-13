@@ -14,8 +14,7 @@ extern JsBoolObject _Js_TrueStruct;
 #define Js_False ((JsObject *) &_Js_FalseStruct)
 #define Js_True ((JsObject *) &_Js_TrueStruct)
 
-#define JsBool_CheckType(obj) ((obj)->ob_type == &JsBool_Type)
+#define JsBool_CheckType(obj) (Js_Type(obj) == &JsBool_Type)
 
 JsObject* JsBool_FromInt(int);
 int JsBool_GetBool(JsObject *);
-

@@ -89,6 +89,9 @@ JsNum_GetInt(JsObject *obj)
 {
 	double dval = JsNum_GetDouble(obj);
 
+	if (isnan(dval))
+		return 0;
+
 	return (int)dval;
 }
 
@@ -153,7 +156,8 @@ JsTypeObject JsNum_Type =
 	sizeof(JsNumObject),
 	0,
 
-	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE,
+	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE |
+		JS_TPFLAGS_INT_SUBCLASS,
 
 	NULL,								/* no new func, generate by api*/
 	(destructor)num_dealloc,			/* tp_dealloc */

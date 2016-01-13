@@ -4,7 +4,7 @@
 
 typedef struct {
 	JsObject_VAR_HEAD
-	int ob_shash;
+	uhash ob_shash;
 	char ob_sval[1];
 
     /* Invariants:
@@ -19,7 +19,7 @@ typedef struct {
 
 extern JsTypeObject JsString_Type;
 
-#define JsString_CheckType(obj) ((obj)->ob_type == &JsString_Type)
+#define JsString_CheckType(obj) (Js_Type(obj) == &JsString_Type)
 
 // C - API
 // unsafe?

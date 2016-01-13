@@ -1,4 +1,4 @@
-#include "runtime.h"
+#pragma once
 
 #define JSVM_HALT 	(vmcode)_jsvm_halt
 
@@ -18,5 +18,11 @@
 #define JSVM_LE		(vmcode)op_le
 #define JSVM_GE		(vmcode)op_ge
 
-void _jsvm_halt(void);
+int jsvm_Init(void);
+void jsvm_Deinit(void);
+
 int jsvm_execute(vmcode*);
+int jsvm_assign(JsObject*);
+
+// WARNING: do not use it
+void _jsvm_halt(void);

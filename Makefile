@@ -1,5 +1,5 @@
 CC = clang
-DBGFLAGS = -g -O0
+DBGFLAGS = -Wall -g -O0
 LDFLAGS = 
 
 .PHONY = clean all test
@@ -25,6 +25,9 @@ boolobject.o: boolobject.c
 dictobject.o: dictobject.c
 	$(CC) $(DBGFLAGS) -c $^
 
+funcobject.o: funcobject.c
+	$(CC) $(DBGFLAGS) -c $^
+
 typeobject.o: typeobject.c
 	$(CC) $(DBGFLAGS) -c $^
 
@@ -38,7 +41,7 @@ jsvm.o: jsvm.c
 	$(CC) $(DBGFLAGS) -c $^
 
 test: object.o typeobject.o numobject.o stringobject.o boolobject.o\
-	dictobject.o operator.o runtime.o jsvm.o testunit.o
+	dictobject.o funcobject.o operator.o runtime.o jsvm.o testunit.o
 	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $(TEST_TARGET)
 
 testunit.o: testunit.c

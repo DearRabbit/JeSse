@@ -37,7 +37,7 @@ struct _dictobject {
 
 extern JsTypeObject JsDict_Type;
 
-#define JsDict_CheckType(obj) ((obj)->ob_type == &JsDict_Type)
+#define JsDict_CheckType(obj) (Js_Type(obj) == &JsDict_Type)
 
 // C - API
 JsObject * JsDict_New(void);

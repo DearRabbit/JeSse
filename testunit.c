@@ -3,12 +3,9 @@
 #include <math.h>
 #include <assert.h>
 
-#include "jsvm.h"
+#include "runtime.h"
 
-#ifdef JS_DEBUG
-extern JsStringObject *nullstring;
 extern JsObject* vmresult;
-#endif
 
 #define PRINTOBJ(obj) (Js_Type(obj)->tp_print(obj, stdout))
 #define HASHOBJ(obj) (Js_Type(obj)->tp_hash(obj))
@@ -21,15 +18,26 @@ int main()
 	_JsBaseVar_Init();
 	_JsDict_Init();
 
-	// JsNumObject* one = JsNum_FromDouble(-0);
-	// JsStringObject* string_two = JsString_FromString("2");
-	// vmcode testfunc[4] = {JSVM_SUB, one, string_two, JSVM_HALT};
+	JsNumObject* one = JsNum_FromDouble(0);
+	JsStringObject* string_two = JsString_FromString("1");
 
-	// jsvm_execute(testfunc);
+	vmcode test[13] = {
+		JSVM_EQ,
+		one,
+		string_two,
+		JSVM_EQ,
+		string_two,
+		one,
+		JSVM_ADD,
+		one,
+		string_two,
+		JSVM_EQ,
+		string_two,
+		one,
+		JSVM_HALT
+	};
 
-	// assert(vmresult != NULL);
-	// PRINTOBJ(vmresult);
-	// PRINTOBJ(one);
+	jsvm_execute(test);
 
 	_JsDict_Deinit();
 	_JsBaseVar_Deinit();

@@ -76,7 +76,7 @@ typedef uhash (*hashfunc)(JsObject *obj);
 #define JS_TPFLAGS_DEFAULT			(1L<<0)
 #define JS_TPFLAGS_BASETYPE			(1L<<10)
 
-// #define JS_TPFLAGS_INT_CAST			(1L<<23)
+#define JS_TPFLAGS_INT_SUBCLASS		(1L<<23)
 
 // Object - define:
 // TypeObject
@@ -110,5 +110,5 @@ extern JsTypeObject JsType_Type;
 uhash _Js_HashPointer(void*);
 uhash JsObject_Hash(JsObject *v);
 
-#define JsType_CheckType(obj) ((obj)->ob_type == &JsTypeObject)
+#define JsType_CheckType(obj) (Js_Type(obj) == &JsTypeObject)
 

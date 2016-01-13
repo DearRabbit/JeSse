@@ -30,7 +30,7 @@ JsBool_GetBool(JsObject *obj)
 		return ((JsBoolObject*)obj)->ob_ival;
 
 	if (JsNum_CheckType(obj))
-	 	return (JsNum_AS_DOUBLE(obj) != 0 && JsNum_AS_DOUBLE(obj) != NAN);
+	 	return (JsNum_AS_DOUBLE(obj) != 0 && !isnan(JsNum_AS_DOUBLE(obj)));
 
 	 if (JsString_CheckType(obj))
 	 	return (Js_Size(obj) != 0);
@@ -65,7 +65,8 @@ JsTypeObject JsBool_Type =
 	sizeof(JsBoolObject),
 	0,
 
-	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE,
+	JS_TPFLAGS_DEFAULT | JS_TPFLAGS_BASETYPE |
+		JS_TPFLAGS_INT_SUBCLASS,
 
 	NULL,								/* no new func, generate by api*/
 	NULL,								/* tp_dealloc */

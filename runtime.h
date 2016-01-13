@@ -6,8 +6,10 @@
 #include "boolobject.h"
 
 #include "dictobject.h"
+#include "funcobject.h"
 
 #include "operator.h"
+#include "jsvm.h"
 
 typedef JsObject JsNullObject;
 typedef JsObject JsUndefObject;

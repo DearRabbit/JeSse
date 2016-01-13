@@ -10,7 +10,8 @@ typedef struct {
 extern JsTypeObject JsNum_Type;
 extern int errnoInNum;
 
-#define JsNum_CheckType(obj) ((obj)->ob_type == &JsNum_Type)
+#define JsNum_CheckType(obj) (Js_Type(obj) == &JsNum_Type)
+#define JsNum_CheckSubClass(obj) (Js_Type(obj)->tp_flags & JS_TPFLAGS_INT_SUBCLASS)
 
 // C - API
 JsObject* JsNum_FromDouble(double);

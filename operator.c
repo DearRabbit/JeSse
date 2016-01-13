@@ -5,11 +5,11 @@
 JsObject*
 op_add(JsObject* v, JsObject* w)
 {
-	if (JsNum_CheckType(v) && JsNum_CheckType(w))
+	// bool & int
+	if (JsNum_CheckSubClass(v) && JsNum_CheckSubClass(w))
 	{
-		// for faster access...
-		double op1 = JsNum_AS_DOUBLE(v);
-		double op2 = JsNum_AS_DOUBLE(w);
+		double op1 = JsNum_GetDouble(v);
+		double op2 = JsNum_GetDouble(w);
 		double result = op1 + op2;
 
 		return JsNum_FromDouble(result);
@@ -18,7 +18,7 @@ op_add(JsObject* v, JsObject* w)
 	{
 		JsObject* str1 = JsString_GetString(v);
 		JsObject* str2 = JsString_GetString(w);
-		JsObject* strres = _JsString_StringJoin(v, w);
+		JsObject* strres = _JsString_StringJoin(str1, str2);
 
 		return strres;
 	}
@@ -121,8 +121,6 @@ JsObject* op_lt(JsObject* v, JsObject* w)
 		return (vtype->tp_compare(v, w) < 0) ? Js_True : Js_False;
 	}
 
-	return Js_False;
-
 	double vdouble = JsNum_GetDouble(v);
 	double wdouble = JsNum_GetDouble(w);
 
@@ -172,9 +170,4 @@ JsObject* op_ge(JsObject* v, JsObject* w)
 	double wdouble = JsNum_GetDouble(w);
 
 	return (vdouble < wdouble) ? Js_False : Js_True;
-}
-
-int op_assign(JsObject* v, JsObject* w)
-{
-	return 0;
 }
