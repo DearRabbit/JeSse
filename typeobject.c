@@ -1,18 +1,5 @@
 #include "object.h"
 
-static JsObject *
-type_new(JsTypeObject *type, JsObject *args, JsObject *kwds)
-{
-	// No implementaion.
-	return NULL;
-}
-
-static void
-type_dealloc(JsTypeObject *type)
-{
-	// free something
-}
-
 JsTypeObject JsType_Type = 
 {
 	JsObject_HEAD_INIT(&JsType_Type)

@@ -2,10 +2,14 @@
 
 #include <stdlib.h>
 
-#define VAR_NULL_STRING "null"
-#define VAR_UNDEF_STRING "undefined"
-
+// _JsTempVarName_Max = 8
 JsObject* _Js_TempVarName[_JsTempVarName_Max];
+
+#ifdef USING_FREELIST
+#define FREELIST_MAXSIZE 64
+static JsObject* _Js_FreeList[FREELIST_MAXSIZE];
+static int _Js_FreeListCount;
+#endif
 
 // Error On Exit, never return NULL
 void*
@@ -14,7 +18,16 @@ Js_Malloc(size_t len)
 	void *space = malloc(len);
 	if (space == NULL)
 	{
-		Js_FatalError("Not enough memory");
+#ifdef USING_FREELIST
+		int i = _Js_FreeListCount;
+		for ( ; i >= 0 ; --i)
+			free(_Js_FreeList[i]);
+		_Js_FreeListCount = 0;
+		space = malloc(len);
+
+		if (space == NULL)
+#endif
+			Js_FatalError("Not enough memory");
 	}
 	return space;
 }
@@ -23,17 +36,34 @@ void
 Js_Free(void* ptr)
 {
 	if (ptr != NULL)
+	{
+#ifdef USING_FREELIST
+		_Js_FreeList[_Js_FreeListCount++] = ptr;
+#else
 		free(ptr);
+#endif
+	}
 }
 
+void
+Js_Exit(void)
+{
+#ifdef USING_FREELIST
+	int i = _Js_FreeListCount;
+	for ( ; i >= 0 ; --i)
+		free(_Js_FreeList[i]);
+#endif
+}
 
 // null & undefined
+#define VAR_NULL_STRING "null"
+#define VAR_UNDEF_STRING "undefined"
 
 static JsObject *null_str;
 static JsObject *undef_str;
 
 int
-_JsDefaultVar_Init(void)
+_JsBaseVar_Init(void)
 {
 	JsObject *v, *w;
 	int i;
@@ -57,7 +87,7 @@ _JsDefaultVar_Init(void)
 }
 
 void
-_JsDefaultVar_Deinit(void)
+_JsBaseVar_Deinit(void)
 {
 	int i;
 	if (null_str != NULL)

@@ -4,7 +4,7 @@
 #include "runtime.h"
 
 #ifndef NSMALLPOSINTS
-#define NSMALLPOSINTS           0//257
+#define NSMALLPOSINTS           16//257
 #endif
 #ifndef NSMALLNEGINTS
 #define NSMALLNEGINTS           0//7
@@ -37,6 +37,7 @@ JsNum_FromDouble(double dval)
 
 #if NSMALLNEGINTS + NSMALLPOSINTS > 0
 	long ival = dval;
+	// WARNING: maybe segmentation fault without init
 	if (ival == dval && -NSMALLNEGINTS <= ival && ival < NSMALLPOSINTS) {
 		v = small_ints[ival + NSMALLNEGINTS];
 		Js_INCREF(v);

@@ -9,11 +9,6 @@
 
 #include "operator.h"
 
-typedef struct _freelist{
-	void *ptr;
-	struct _freelist* next;
-} JsFreeList;
-
 typedef JsObject JsNullObject;
 typedef JsObject JsUndefObject;
 
@@ -44,9 +39,13 @@ void _JsString_Deinit(void);
 int _JsBool_Init(void);
 void _JsBool_Deinit(void);
 
-int _JsDefaultVar_Init(void);
-void _JsDefaultVar_Deinit(void);
+int _JsBaseVar_Init(void);
+void _JsBaseVar_Deinit(void);
+
+int _JsDict_Init(void);
+void _JsDict_Deinit(void);
 
 // Exit on error, never return NULL
 void* Js_Malloc(size_t);
 void Js_Free(void*);
+void Js_Exit(void);

@@ -50,6 +50,8 @@ typedef struct {
 		if (--((JsObject*)(obj))->ob_refcnt == 0)	\
 			_Js_Dealloc(obj);						\
 	}while(0)
+#define Js_XINCREF(op) do { if ((op) == NULL) ; else Js_INCREF(op); } while (0)
+#define Js_XDECREF(op) do { if ((op) == NULL) ; else Js_DECREF(op); } while (0)
 
 // typedef - function ptr groups:
 // operators
@@ -59,9 +61,9 @@ typedef JsObject* (*ternaryfunc)(JsObject *, JsObject *, JsObject *);
 typedef int (*inquiry)(JsObject *);
 typedef ssize_t (*lenfunc)(JsObject *);
 // methods
-// newfunc: TypeObject *type, Object *args, Object *kwds
-// args stores arguments without key, kwds is a list
-typedef JsObject *(*newfunc)(struct _typeobject *type, JsObject *args, JsObject *kwds);
+// newfunc: TypeObject *type, Object *args
+// 'args' is the dict of arguments.
+typedef JsObject *(*newfunc)(struct _typeobject *type, JsObject *args);
 typedef void (*destructor)(JsObject *obj);
 // print to FILE* fp
 typedef int (*printfunc)(JsObject *obj, FILE *fp);
@@ -106,6 +108,7 @@ extern JsTypeObject JsType_Type;
 
 // common hash function
 uhash _Js_HashPointer(void*);
+uhash JsObject_Hash(JsObject *v);
 
 #define JsType_CheckType(obj) ((obj)->ob_type == &JsTypeObject)
 

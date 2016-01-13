@@ -14,15 +14,30 @@ extern JsStringObject *nullstring;
 
 int main()
 {
+	_JsNum_Init();
 	_JsBool_Init();
+	_JsBaseVar_Init();
+	_JsDict_Init();
 
-	JsObject* a = JsString_FromString("dsa");
-	JsObject* b = JsString_FromString("jsjs");
+	int i = 0;
+	JsObject * dict_test = JsDict_New();
+	JsStringObject* myvalue = JsString_FromString("myvalue");
 
-	JsObject* c = op_add(a, b);
-	PRINTOBJ(c);
+	for (i = 0; i < _JsTempVarName_Max; ++i)
+	{
+		JsDict_SetItem(dict_test, _Js_TempVarName[i], myvalue);
+	}
 
+	JsStringObject* test_value = JsDict_GetItem(dict_test, _Js_TempVarName[2]);
+
+	PRINTOBJ(test_value);
+
+	_JsDict_Deinit();
+	_JsBaseVar_Deinit();
 	_JsBool_Deinit();
+	_JsNum_Deinit();
+
+	Js_Exit();
 
 	return 0;
 }

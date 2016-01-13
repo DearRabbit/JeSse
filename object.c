@@ -11,3 +11,14 @@ _Js_HashPointer(void *p)
 	x = (uhash)y;
 	return x;
 }
+
+uhash
+JsObject_Hash(JsObject *v)
+{
+	JsTypeObject *tp = v->ob_type;
+	if (tp->tp_hash != NULL)
+		return (*tp->tp_hash)(v);
+
+	/* Use address as hash value */
+	return _Js_HashPointer(v);
+}
