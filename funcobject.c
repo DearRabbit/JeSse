@@ -1,5 +1,20 @@
 #include "runtime.h"
 
+JsObject*
+JsDef_NewInstance(JsObject* def)
+{
+	register JsFuncObject* alloc;
+
+	alloc = Js_Malloc(sizeof(JsFuncObject));
+
+	JsObject_INIT(alloc, &JsFunc_Type);
+	alloc->func_def = def;
+
+	// var_table should be new in calling
+	alloc->var_table = NULL;
+	return alloc;
+}
+
 static void
 def_dealloc(JsDefObject *obj)
 {

@@ -18,6 +18,9 @@
 #define JSVM_LE		(vmcode)op_le
 #define JSVM_GE		(vmcode)op_ge
 
+#define JSVM_
+#define JSVM_JUMP_MASK 0L
+
 int jsvm_Init(void);
 void jsvm_Deinit(void);
 

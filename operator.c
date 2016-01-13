@@ -16,9 +16,14 @@ op_add(JsObject* v, JsObject* w)
 	}
 	else
 	{
-		JsObject* str1 = JsString_GetString(v);
-		JsObject* str2 = JsString_GetString(w);
-		JsObject* strres = _JsString_StringJoin(str1, str2);
+		JsObject* strv = JsString_GetString(v);
+		JsObject* strw = JsString_GetString(w);
+		JsObject* strres = _JsString_StringJoin(strv, strw);
+
+		if (!JsString_CheckType(v))
+			Js_DECREF(strv);
+		if (!JsString_CheckType(w))
+			Js_DECREF(strw);
 
 		return strres;
 	}

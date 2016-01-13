@@ -106,7 +106,16 @@ num_dealloc(JsNumObject *obj)
 static void
 _num_internal_tocstring(JsNumObject *v, char* buffer)
 {
-	// double fval = v->ob_ival;
+	/* TODO: Rewrite it, memory's leaking
+	 *  __Balloc_D2A (in /usr/lib/system/libsystem_c.dylib)
+	 *	__d2b_D2A (in /usr/lib/system/libsystem_c.dylib)
+	 *	__dtoa (in /usr/lib/system/libsystem_c.dylib)
+	 *	__vfprintf (in /usr/lib/system/libsystem_c.dylib)
+	 *	__v2printf (in /usr/lib/system/libsystem_c.dylib)
+	 *	vsprintf_l (in /usr/lib/system/libsystem_c.dylib)
+	 *	__sprintf_chk (in /usr/lib/system/libsystem_c.dylib)
+	 *	_num_internal_tocstring (numobject.c)
+	 */
 	sprintf(buffer, "%g", v->ob_ival);
 }
 

@@ -32,11 +32,17 @@ extern JsTypeObject JsDef_Type;
 
 #define JsDef_CheckType(obj) (Js_Type(obj) == &JsDef_Type)
 
+JsObject* JsDef_NewInstance(JsObject* def);
+
 
 struct _funcobject{
 	JsObject_HEAD
-	
+
 	JsDefObject* func_def;
+
+	JsFuncObject* callee_func;
+	JsFuncObject* caller_func;
+
 	JsDictObject* var_table;
 };
 
@@ -45,3 +51,9 @@ extern JsTypeObject JsFunc_Type;
 #define JsFunc_CheckType(obj) (Js_Type(obj) == &JsFunc_Type)
 
 #define JsFunc_GetDef(obj) (((JsFuncObject*)(obj))->func_def)
+
+#define JSFunc_SetCallingRelation(caller, callee) do						\
+	{																		\
+		((JsFuncObject*)(caller))->callee_func = ((JsFuncObject*)(callee));	\
+		((JsFuncObject*)(callee))->caller_func = ((JsFuncObject*)(caller));	\
+	} while (0)

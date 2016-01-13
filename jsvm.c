@@ -32,7 +32,8 @@ _jsvm_halt(void)
 		Js_INCREF(vmresult);								\
 	} while (0)
 
-int jsvm_execute(vmcode* vm_set)
+int
+jsvm_execute(vmcode* vm_set)
 {
 	register ssize_t pc = 0;
 	register vmcode func;
@@ -43,7 +44,7 @@ int jsvm_execute(vmcode* vm_set)
 
 		// when the code < 0, it's in the operation set;
 		// otherwise it's a function ptr of C
-		if ((long)func < 0)
+		if (func <= 0)
 		{
 
 		}
@@ -56,7 +57,10 @@ int jsvm_execute(vmcode* vm_set)
 			else if (func == JSVM_EQ)
 				_JS_EXECUTE_COMPARE(op_eq);
 			else if (func == JSVM_HALT)
+			{
 				pc = -1;
+				_jsvm_halt();
+			}
 			else
 				assert(0);
 		}
@@ -64,14 +68,15 @@ int jsvm_execute(vmcode* vm_set)
 	return 0;
 }
 
-int jsvm_Init(void)
+int
+jsvm_Init(void)
 {
 	// unusual way of initialization.
 	JsFuncObject* alloc = Js_Malloc(sizeof(JsFuncObject));
 	global_instance = alloc;
 	current_instance = alloc;
 
-	JsObject_INIT(alloc, &JsDef_Type);
+	JsObject_INIT(alloc, &JsFunc_Type);
 	// no need to create a global definition.
 	alloc->func_def = NULL;
 	alloc->var_table = (JsDictObject*)JsDict_New();
@@ -79,7 +84,8 @@ int jsvm_Init(void)
 	return 0;
 }
 
-void jsvm_Deinit(void)
+void
+jsvm_Deinit(void)
 {
 
 }

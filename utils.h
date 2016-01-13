@@ -28,4 +28,4 @@ typedef long uhash;
 typedef int uhash;
 #endif
 
-typedef void* vmcode;
+typedef long vmcode;
