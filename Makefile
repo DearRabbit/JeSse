@@ -4,6 +4,7 @@ LDFLAGS =
 
 .PHONY = clean all test
 
+ALL_OBJECT =
 TEST_TARGET = test
 TARGET = 
 
@@ -32,10 +33,12 @@ operator.o: operator.c
 
 runtime.o: runtime.c
 	$(CC) $(DBGFLAGS) -c $^
-	
+
+jsvm.o: jsvm.c
+	$(CC) $(DBGFLAGS) -c $^
 
 test: object.o typeobject.o numobject.o stringobject.o boolobject.o\
-	dictobject.o operator.o runtime.o testunit.o 
+	dictobject.o operator.o runtime.o jsvm.o testunit.o
 	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $(TEST_TARGET)
 
 testunit.o: testunit.c

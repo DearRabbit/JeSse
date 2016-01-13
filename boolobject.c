@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "runtime.h"
 
@@ -25,7 +26,16 @@ JsBool_FromInt(int val)
 int
 JsBool_GetBool(JsObject *obj)
 {
-	return ((JsBoolObject*)obj)->ob_ival;
+	if (JsBool_CheckType(obj))
+		return ((JsBoolObject*)obj)->ob_ival;
+
+	if (JsNum_CheckType(obj))
+	 	return (JsNum_AS_DOUBLE(obj) != 0 && JsNum_AS_DOUBLE(obj) != NAN);
+
+	 if (JsString_CheckType(obj))
+	 	return (Js_Size(obj) != 0);
+
+	 return 0;
 }
 
 static int

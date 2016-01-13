@@ -11,5 +11,12 @@
 #define JSVM_OR		(vmcode)op_or
 #define JSVM_XOR	(vmcode)op_xor
 
+#define JSVM_EQ		(vmcode)op_eq
+#define JSVM_NEQ	(vmcode)op_neq
+#define JSVM_LT		(vmcode)op_lt
+#define JSVM_GT		(vmcode)op_gt
+#define JSVM_LE		(vmcode)op_le
+#define JSVM_GE		(vmcode)op_ge
+
 void _jsvm_halt(void);
 int jsvm_execute(vmcode*);

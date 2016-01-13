@@ -6,18 +6,14 @@
 
 #define CHAROBJECT_MAX 255
 
-// nullstring is the first element of characters
-#ifdef JS_DEBUG
-	JsStringObject *nullstring;
-#else
-	static JsStringObject *nullstring;
-#endif
+// use nullstring as constant pool
+static JsStringObject _Js_Nullstring;
 
 JsObject*
 JsString_FromStringAndSize(const char *str, size_t size)
 {
 	register JsStringObject *op;
-	if (size == 0 && (op = nullstring) != NULL) 
+	if (size == 0 && (op = &_Js_Nullstring) != NULL) 
 	{
 		Js_INCREF(op);
 		return (JsObject *)op;
@@ -78,7 +74,7 @@ _JsString_StringJoin(JsObject *v, JsObject *w)
 
 	JsStringObject *op;
 
-	if (size == 0 && (op = nullstring) != NULL) 
+	if (size == 0 && (op = &_Js_Nullstring) != NULL) 
 	{
 		Js_INCREF(op);
 		return (JsObject *)op;
@@ -195,20 +191,19 @@ JsTypeObject JsString_Type = {
 int
 _JsString_Init(void)
 {
-	int i;
-	JsStringObject *v;
-	v = malloc(sizeof(JsStringObject));
+	// JsStringObject *v;
+	// v = malloc(sizeof(JsStringObject));
 
-	if (v == NULL)
-	{
-		dbgprint("Initialization of stringobject failed");
-		return -1;
-	}
+	// if (v == NULL)
+	// {
+	// 	dbgprint("Initialization of stringobject failed");
+	// 	return -1;
+	// }
 
-	// initialization of nullstring
-	JsObject_INIT_VAR(v, &JsString_Type, 0);
-	*(v->ob_sval) = 0;
-	nullstring = v;
+	// // initialization of nullstring
+	// JsObject_INIT_VAR(v, &JsString_Type, 0);
+	// *(v->ob_sval) = 0;
+	// nullstring = v;
 
 	return 0;
 }
@@ -216,6 +211,12 @@ _JsString_Init(void)
 void
 _JsString_Deinit(void)
 {
-	if (nullstring != NULL)
-		free(nullstring);
+	// if (nullstring != NULL)
+	// 	free(nullstring);
 }
+
+static JsStringObject _Js_Nullstring = {
+	JsVarObject_HEAD_INIT(&JsString_Type, 0)
+	0,
+	0
+};

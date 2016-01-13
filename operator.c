@@ -1,5 +1,7 @@
 #include "runtime.h"
 
+#include <math.h>
+
 JsObject*
 op_add(JsObject* v, JsObject* w)
 {
@@ -82,4 +84,97 @@ op_xor(JsObject* v, JsObject* w)
 	int result = op1 ^ op2;
 
 	return JsNum_FromDouble((double)result);
+}
+
+JsObject* op_eq(JsObject* v, JsObject* w)
+{
+	JsTypeObject* vtype = Js_Type(v);
+	JsTypeObject* wtype = Js_Type(w);
+
+	if (vtype->tp_compare == NULL || wtype->tp_compare == NULL)
+	{
+		return (v==w) ? Js_True : Js_False;
+	}
+	if (vtype == wtype)
+	{
+		return (vtype->tp_compare(v, w) == 0) ? Js_True : Js_False;
+	}
+
+	double vdouble = JsNum_GetDouble(v);
+	double wdouble = JsNum_GetDouble(w);
+
+	return (vdouble==wdouble) ? Js_True : Js_False;
+}
+JsObject* op_neq(JsObject* v, JsObject* w)
+{
+	if (op_eq(v, w) == Js_False)
+		return Js_True;
+	return Js_False;
+}
+JsObject* op_lt(JsObject* v, JsObject* w)
+{
+	JsTypeObject* vtype = Js_Type(v);
+	JsTypeObject* wtype = Js_Type(w);
+
+	if (vtype == wtype)
+	{
+		return (vtype->tp_compare(v, w) < 0) ? Js_True : Js_False;
+	}
+
+	return Js_False;
+
+	double vdouble = JsNum_GetDouble(v);
+	double wdouble = JsNum_GetDouble(w);
+
+	return (vdouble < wdouble) ? Js_True : Js_False;
+}
+JsObject* op_gt(JsObject* v, JsObject* w)
+{
+	JsTypeObject* vtype = Js_Type(v);
+	JsTypeObject* wtype = Js_Type(w);
+
+	if (vtype == wtype)
+	{
+		return (vtype->tp_compare(v, w) > 0) ? Js_True : Js_False;
+	}
+
+	double vdouble = JsNum_GetDouble(v);
+	double wdouble = JsNum_GetDouble(w);
+
+	return (vdouble > wdouble) ? Js_True : Js_False;
+}
+JsObject* op_le(JsObject* v, JsObject* w)
+{
+	JsTypeObject* vtype = Js_Type(v);
+	JsTypeObject* wtype = Js_Type(w);
+
+	if (vtype == wtype)
+	{
+		return (vtype->tp_compare(v, w) > 0) ? Js_False : Js_True;
+	}
+
+	double vdouble = JsNum_GetDouble(v);
+	double wdouble = JsNum_GetDouble(w);
+
+	return (vdouble > wdouble) ? Js_False : Js_True;
+}
+JsObject* op_ge(JsObject* v, JsObject* w)
+{
+	JsTypeObject* vtype = Js_Type(v);
+	JsTypeObject* wtype = Js_Type(w);
+
+	if (vtype == wtype)
+	{
+		return (vtype->tp_compare(v, w) < 0) ? Js_False : Js_True;
+	}
+
+	double vdouble = JsNum_GetDouble(v);
+	double wdouble = JsNum_GetDouble(w);
+
+	return (vdouble < wdouble) ? Js_False : Js_True;
+}
+
+int op_assign(JsObject* v, JsObject* w)
+{
+	return 0;
 }

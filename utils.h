@@ -20,9 +20,9 @@ typedef uint32_t u32;
 	fprintf(stderr, format, ##args),\
 	exit(-1)
 
-#undef HASH_AS_LONG
+#define RUN_IN_64MODE
 
-#ifdef HASH_AS_LONG
+#ifdef RUN_IN_64MODE
 typedef long uhash;
 #else
 typedef int uhash;

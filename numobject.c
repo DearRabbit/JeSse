@@ -75,6 +75,11 @@ JsNum_GetDouble(JsObject *obj)
 		}
 		return ret;
 	}
+	if (JsBool_CheckType(obj))
+	{
+		return (obj == Js_True) ? 1 : 0;
+	}
+
 	errnoInNum = JsException_ParseError;
 	return NAN;
 }
