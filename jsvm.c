@@ -29,7 +29,7 @@ _jsvm_halt(void)
 #define _JS_EXECUTE_COMPARE(cmpfunc) do						\
 	{														\
 		_JS_EXECUTE_BINARY(cmpfunc);						\
-		Js_INCREF(vmresult);								\
+		//Js_INCREF(vmresult);								\
 	} while (0)
 
 int

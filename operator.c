@@ -91,7 +91,8 @@ op_xor(JsObject* v, JsObject* w)
 	return JsNum_FromDouble((double)result);
 }
 
-JsObject* op_eq(JsObject* v, JsObject* w)
+static JsObject* 
+_internal_op_eq(JsObject* v, JsObject* w)
 {
 	JsTypeObject* vtype = Js_Type(v);
 	JsTypeObject* wtype = Js_Type(w);
@@ -110,69 +111,119 @@ JsObject* op_eq(JsObject* v, JsObject* w)
 
 	return (vdouble==wdouble) ? Js_True : Js_False;
 }
+
+JsObject* op_eq(JsObject* v, JsObject* w)
+{
+	JsObject* ret = _internal_op_eq(v, w);
+	Js_INCREF(ret);
+	return ret;
+}
 JsObject* op_neq(JsObject* v, JsObject* w)
 {
-	if (op_eq(v, w) == Js_False)
-		return Js_True;
-	return Js_False;
+	JsObject* oppo = _internal_op_eq(v, w);
+	JsObject* ret = (oppo == Js_False) ? Js_True : Js_False;
+
+	Js_INCREF(ret);
+	return ret;
 }
 JsObject* op_lt(JsObject* v, JsObject* w)
 {
 	JsTypeObject* vtype = Js_Type(v);
 	JsTypeObject* wtype = Js_Type(w);
-
+	JsObject* ret;
+	
 	if (vtype == wtype)
 	{
-		return (vtype->tp_compare(v, w) < 0) ? Js_True : Js_False;
+		ret = (vtype->tp_compare(v, w) < 0) ? Js_True : Js_False;
+		Js_INCREF(ret);
+		return ret;
 	}
 
 	double vdouble = JsNum_GetDouble(v);
 	double wdouble = JsNum_GetDouble(w);
 
-	return (vdouble < wdouble) ? Js_True : Js_False;
+	ret = (vdouble < wdouble) ? Js_True : Js_False;
+	Js_INCREF(ret);
+	return ret;
 }
 JsObject* op_gt(JsObject* v, JsObject* w)
 {
 	JsTypeObject* vtype = Js_Type(v);
 	JsTypeObject* wtype = Js_Type(w);
-
+	JsObject* ret;
+	
 	if (vtype == wtype)
 	{
-		return (vtype->tp_compare(v, w) > 0) ? Js_True : Js_False;
+		ret = (vtype->tp_compare(v, w) > 0) ? Js_True : Js_False;
+		Js_INCREF(ret);
+		return ret;
 	}
 
 	double vdouble = JsNum_GetDouble(v);
 	double wdouble = JsNum_GetDouble(w);
 
-	return (vdouble > wdouble) ? Js_True : Js_False;
+	ret = (vdouble > wdouble) ? Js_True : Js_False;
+	Js_INCREF(ret);
+	return ret;
 }
 JsObject* op_le(JsObject* v, JsObject* w)
 {
 	JsTypeObject* vtype = Js_Type(v);
 	JsTypeObject* wtype = Js_Type(w);
+	JsObject* ret;
 
 	if (vtype == wtype)
 	{
-		return (vtype->tp_compare(v, w) > 0) ? Js_False : Js_True;
+		ret = (vtype->tp_compare(v, w) > 0) ? Js_False : Js_True;
+		Js_INCREF(ret);
+		return ret;
 	}
 
 	double vdouble = JsNum_GetDouble(v);
 	double wdouble = JsNum_GetDouble(w);
 
-	return (vdouble > wdouble) ? Js_False : Js_True;
+	ret = (vdouble > wdouble) ? Js_False : Js_True;
+	Js_INCREF(ret);
+	return ret;
 }
 JsObject* op_ge(JsObject* v, JsObject* w)
 {
 	JsTypeObject* vtype = Js_Type(v);
 	JsTypeObject* wtype = Js_Type(w);
+	JsObject* ret;
 
 	if (vtype == wtype)
 	{
-		return (vtype->tp_compare(v, w) < 0) ? Js_False : Js_True;
+		ret = (vtype->tp_compare(v, w) < 0) ? Js_False : Js_True;
+		Js_INCREF(ret);
+		return ret;
 	}
 
 	double vdouble = JsNum_GetDouble(v);
 	double wdouble = JsNum_GetDouble(w);
 
-	return (vdouble < wdouble) ? Js_False : Js_True;
+	ret = (vdouble < wdouble) ? Js_False : Js_True;
+	Js_INCREF(ret);
+	return ret;
+}
+
+JsObject* op_logic_and(JsObject* v, JsObject* w)
+{
+	int valv = JsBool_GetBool(v);
+	int valw = JsBool_GetBool(w);
+	JsObject* ret;
+
+	ret = (valv && valw) ? Js_True : Js_False;
+	Js_INCREF(ret);
+	return ret;
+}
+JsObject* op_logic_or(JsObject* v, JsObject* w)
+{
+	int valv = JsBool_GetBool(v);
+	int valw = JsBool_GetBool(w);
+	JsObject* ret;
+
+	ret = (valv || valw) ? Js_True : Js_False;
+	Js_INCREF(ret);
+	return ret;
 }
