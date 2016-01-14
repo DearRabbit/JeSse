@@ -1,12 +1,14 @@
 #pragma once
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define JS_DEBUG
 #define CHAR_BIT 8
 
 typedef uint64_t u64;
 typedef uint32_t u32;
+typedef int32_t s32;
 
 #ifdef JS_DEBUG
 #	define dbgprint(format,args...) \

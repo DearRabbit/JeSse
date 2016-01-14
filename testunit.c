@@ -23,28 +23,36 @@ int main()
 	JsNumObject* one = JsNum_FromDouble(2);
 	JsStringObject* string_two = JsString_FromString("2");
 
-	vmcode test[13] = {
-		JSVM_EQ,
-		_(one),
-		_(string_two),
-		JSVM_EQ,
-		_(string_two),
-		_(one),
-		JSVM_ADD,
-		_(one),
-		_(string_two),
-		JSVM_EQ,
-		_(string_two),
-		_(one),
-		JSVM_HALT
-	};
+	JsStringObject* var1 = JsString_FromString("var1");
+	JsStringObject* var2 = JsString_FromString("var2");
+	JsStringObject* var3 = JsString_FromString("var3");
+	JsNumObject* value1 = JsNum_FromDouble(1);
+	JsNumObject* value2 = JsNum_FromDouble(2);
+	JsNumObject* value3 = JsNum_FromDouble(3);
 
-	jsvm_execute(test);
+	JsDictObject* mydict = JsDict_New();
+	JsDict_SetItem(mydict, var1, value1);
+	JsDict_SetItem(mydict, var2, value2);
+	JsDict_SetItem(mydict, var3, value3);
+	JsDict_DelItem(mydict, var3);
 
-	PRINTOBJ(vmresult);
+	JsObject* ptr = JsDict_GetItem(mydict, var3);
+	
 
-	Js_DECREF(one);
-	Js_DECREF(string_two);
+	// vmcode test[13] = {
+	// 	JSVM_EQ,
+	// 	_(one),
+	// 	_(string_two),
+	// 	JSVM_SetJump_Offset(-4),
+	// 	JSVM_HALT
+	// };
+
+	// jsvm_execute(test);
+
+	//PRINTOBJ(vmresult);
+
+	// Js_DECREF(one);
+	// Js_DECREF(string_two);
 
 	_JsDict_Deinit();
 	_JsBaseVar_Deinit();

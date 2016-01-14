@@ -27,7 +27,7 @@ JsDict_New(void)
 {
 	register JsDictObject *mp;
 	if (dummy == NULL) { /* Auto-initialize dummy */
-		dummy = JsString_FromString("$<dummy key>");
+		dummy = JsString_FromString("<dummy key>");
 	}
 	if (numfree) {
 		mp = free_list[--numfree];

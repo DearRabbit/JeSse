@@ -1,18 +1,77 @@
 #include "runtime.h"
 
+#include <assert.h>
+
 JsObject*
 JsDef_NewInstance(JsObject* def)
 {
 	register JsFuncObject* alloc;
 
+	assert(JsDef_CheckType(def));
 	alloc = Js_Malloc(sizeof(JsFuncObject));
 
 	JsObject_INIT(alloc, &JsFunc_Type);
-	alloc->func_def = def;
+	alloc->func_def = (JsDefObject*)def;
 
-	// var_table should be new in calling
+	// var_table should be new in calling_func
 	alloc->var_table = NULL;
-	return alloc;
+	return (JsObject*)alloc;
+}
+
+/* return the exact function vartable of given var name;
+ * search the local variable first.
+ * do not support using before declaration.
+ */
+#define _JsFunc_VarTable(func) (((JsFuncObject*)(func))->var_table)
+
+static JsDictObject*
+_JsFunc_SearchVar(JsFuncObject* func, JsObject* name)
+{
+	JsObject* value;
+	JsFuncObject* current_scope = func;
+	JsDictObject* current_table;
+
+	assert(func != NULL);
+	do
+	{
+		current_table = _JsFunc_VarTable(current_scope);
+		value = JsDict_GetItem((JsObject*)current_table, name);
+		if (value)
+			return current_table;
+		current_scope = JsFunc_GetScope(current_scope);
+	} while (current_scope);
+	return NULL;
+}
+
+int
+JsFunc_SetVariable(JsFuncObject* func, JsObject* name, JsObject* value)
+{
+	JsDictObject* dict;
+	dict = _JsFunc_SearchVar(func, name);
+	if (dict == NULL)
+	{
+		return JsDict_SetItem((JsObject*)_JsFunc_VarTable(func),
+			name, value);
+	}
+	else
+	{
+		return JsDict_SetItem((JsObject*)dict, name, value);
+	}
+}
+
+JsObject*
+JsFunc_GetVariable(JsFuncObject* func, JsObject* name)
+{
+	JsDictObject* dict;
+	dict = _JsFunc_SearchVar(func, name);
+	if (dict == NULL)
+	{
+		Js_FatalError("ReferenceError: undefined var name");
+	}
+	else
+	{
+		return JsDict_GetItem((JsObject*)dict, name);
+	}
 }
 
 static void

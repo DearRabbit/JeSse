@@ -44,9 +44,9 @@ jsvm_execute(vmcode* vm_set)
 
 		// when the code < 0, it's in the operation set;
 		// otherwise it's a function ptr of C
-		if (func <= 0)
+		if (func < 0 && JSVM_CHECKJUMP(func))
 		{
-
+			pc += (JSVM_GetJump_Offset(func) + 1);
 		}
 		else
 		{
@@ -61,11 +61,47 @@ jsvm_execute(vmcode* vm_set)
 				pc = -1;
 				_jsvm_halt();
 			}
+
+			// less frequently
 			else
 				assert(0);
 		}
 	}
 	return 0;
+}
+
+int jsvm_assign_local(JsObject* name, JsObject* value)
+{
+	return JsFunc_SetVariable(current_instance, name, value);
+}
+int jsvm_assign_global(JsObject* name, JsObject* value)
+{
+	return JsFunc_SetVariable(global_instance, name, value);
+}
+int jsvm_callfunc(JsObject* name)
+{
+	JsObject* funptr;
+	funptr = JsFunc_GetVariable(current_instance, name);
+
+	assert(funptr);
+	if (JsDef_CheckType(funptr))
+	{
+		// try to new an instance
+		funptr = JsDef_NewInstance(funptr);
+	}
+	if (JsFunc_CheckType(funptr))
+	{
+		// just call it if it's an instance.
+		JsFunc_SetCallingRelation(current_instance, funptr);
+		current_instance = (JsFuncObject*)funptr;
+		jsvm_execute(JsFunc_GetCode(funptr));
+
+		// WARING&TODO: to pass argument
+		return 0;
+	}
+
+	assert(0);
+	return -1;
 }
 
 int
