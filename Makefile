@@ -47,7 +47,27 @@ test: object.o typeobject.o numobject.o stringobject.o boolobject.o\
 testunit.o: testunit.c
 	$(CC) $(DBGFLAGS) -c $^
 
+lex.yy.o: lex.yy.c
+	$(CC) $(DBGFLAGS) -c $^
+
+yacc.tab.o: yacc.tab.c
+	$(CC) $(DBGFLAGS) -c $^ $(COMFLAGS)
+
+lex.yy.c: lex.l yacc.tab.h
+	$(LEX) $<
+
+yacc.tab.h yacc.tab.c: yacc.y
+	$(YACC) $<
+
+test_parser.o:	JsAST.c
+	$(CC) -o $@ -c $< $(DBGFLAGS)
+
+test_parser: CC=gcc
+test_parser: test_parser.o lex.yy.o yacc.tab.o
+	$(CC) -o $@ $^ $(DBGFLAGS)
+
 clean:
 	rm -rf *.dSYM/
 	rm -f *.o
 	rm -f $(TEST_TARGET)
+	rm -f yacc.tab.* lex.yy.c
