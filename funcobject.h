@@ -2,12 +2,13 @@
 
 #include "object.h"
 
+typedef struct _astStruct JsAst;
 typedef struct _defobject JsDefObject;
 typedef struct _funcobject JsFuncObject;
 struct _defobject{
 	JsObject_HEAD
 	
-	int argv_count;
+	// int argv_count;
 	/*	for function like
 	 *	"function(){
 	 *		return 0;
@@ -16,7 +17,7 @@ struct _defobject{
 	 *	char* func_string = 
 	 *	'function(){\n\treturn 0;\n}'
 	 */
-	JsStringObject* func_string;
+	// JsStringObject* func_string;
 
 	/*	$global-def
 	 *	 |
@@ -26,14 +27,16 @@ struct _defobject{
 	 *
 	 */
 	JsFuncObject* scoping;
-	vmcode* vm_set;
+	// vmcode* vm_set;
+
+	JsAst* ast;
 };
 
 extern JsTypeObject JsDef_Type;
 
 #define JsDef_CheckType(obj) (Js_Type(obj) == &JsDef_Type)
 JsObject* JsDef_NewInstance(JsObject* def);
-
+#define JsDef_GetAst(obj) (((JsDefObject*)(obj)) -> ast)
 
 struct _funcobject{
 	JsObject_HEAD
@@ -59,7 +62,8 @@ extern JsTypeObject JsFunc_Type;
 		((JsFuncObject*)(caller))->callee_func = ((JsFuncObject*)(callee));	\
 		((JsFuncObject*)(callee))->caller_func = ((JsFuncObject*)(caller));	\
 	} while (0)
-
+	
+int JsFunc_DefVariable(JsFuncObject* func, JsObject* name, JsObject* value);
 int JsFunc_SetVariable(JsFuncObject* func, JsObject* name, JsObject* value);
 JsObject* JsFunc_GetVariable(JsFuncObject* func, JsObject* name);
 

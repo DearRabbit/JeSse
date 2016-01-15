@@ -14,7 +14,7 @@ JsDef_NewInstance(JsObject* def)
 	alloc->func_def = (JsDefObject*)def;
 
 	// var_table should be new in calling_func
-	alloc->var_table = NULL;
+	alloc->var_table = JsDict_New();
 	return (JsObject*)alloc;
 }
 
@@ -41,6 +41,12 @@ _JsFunc_SearchVar(JsFuncObject* func, JsObject* name)
 		current_scope = JsFunc_GetScope(current_scope);
 	} while (current_scope);
 	return NULL;
+}
+
+int
+JsFunc_DefVariable(JsFuncObject* func, JsObject* name, JsObject* value)
+{
+	return JsDict_SetItem((JsObject*)_JsFunc_VarTable(func), name, value);
 }
 
 int
