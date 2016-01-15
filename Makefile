@@ -1,4 +1,4 @@
-CC = clang
+CC = gcc
 LEX = flex
 YACC = bison -dtv
 DBGFLAGS = -Wall -g -O0
@@ -8,10 +8,9 @@ LDFLAGS =
 
 ALL_OBJECT =
 TEST_TARGET = test
-TARGET = 
+TARGET = jesse
 
-all: CC=gcc
-all: jesse
+all: $(TARGET)
 
 jesse: object.o numobject.o stringobject.o boolobject.o dictobject.o\
 	funcobject.o typeobject.o operator.o runtime.o jsvm.o \
@@ -82,5 +81,6 @@ test_parser: jsast.o lex.yy.o yacc.tab.o test_parser.o
 clean:
 	rm -rf *.dSYM/
 	rm -f *.o
-	rm -f $(TEST_TARGET)
+	rm -f $(TEST_TARGET) $(TARGET)
 	rm -f yacc.tab.* lex.yy.c yacc.output
+	rm -f *.exe

@@ -18,17 +18,16 @@ int main()
 	_JsBaseVar_Init();
 	_JsDict_Init();
 
-	JsNumObject* one = JsNum_FromDouble(2);
-	JsStringObject* string_two = JsString_FromString("2");
+	
+	JsDictObject* mydict = (JsDictObject*)JsDict_New();
 
 	JsStringObject* var1 = JsString_FromString("var1");
 	JsStringObject* var2 = JsString_FromString("var2");
 	JsStringObject* var3 = JsString_FromString("var3");
 	JsNumObject* value1 = JsNum_FromDouble(1);
 	JsNumObject* value2 = JsNum_FromDouble(2);
-	JsNumObject* value3 = JsNum_FromDouble(3);
+	JsNumObject* value3 = JsNum_FromDouble(999999);
 
-	JsDictObject* mydict = JsDict_New();
 	JsDict_SetItem(mydict, var1, value1);
 	JsDict_SetItem(mydict, var2, value2);
 	JsDict_SetItem(mydict, var3, value3);
