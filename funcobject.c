@@ -50,14 +50,16 @@ _JsFunc_SearchVar(JsFuncObject* func, JsObject* name)
 	JsDictObject* current_table;
 
 	assert(func != NULL);
-	do
+	while (current_scope)
 	{
 		current_table = _JsFunc_VarTable(current_scope);
 		value = JsDict_GetItem((JsObject*)current_table, name);
 		if (value)
 			return current_table;
+        if (current_scope->func_def == NULL)
+            return NULL;
 		current_scope = JsFunc_GetScope(current_scope);
-	} while (current_scope);
+	}
 	return NULL;
 }
 
@@ -130,7 +132,7 @@ func_print(JsFuncObject *obj, FILE *fp)
 }
 
 static JsObject *
-def_tostring(JsDefObject *v) 
+def_tostring(JsDefObject *v)
 {
 	// return (JsObject*)(v->func_string);
 	JsObject *string = JsString_FromString("[Function Definition]");
@@ -138,7 +140,7 @@ def_tostring(JsDefObject *v)
 }
 
 static JsObject *
-func_tostring(JsFuncObject *v) 
+func_tostring(JsFuncObject *v)
 {
 	// return (JsObject*)(JsFunc_GetDef(v)->func_string);
 	JsObject *string = JsString_FromString("[Function]");

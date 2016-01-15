@@ -8,7 +8,7 @@ typedef struct _funcobject JsFuncObject;
 struct _defobject{
 	JsObject_HEAD
 	
-	// int argv_count;
+	int argv_count;
 	/*	for function like
 	 *	"function(){
 	 *		return 0;
@@ -17,7 +17,7 @@ struct _defobject{
 	 *	char* func_string = 
 	 *	'function(){\n\treturn 0;\n}'
 	 */
-	// JsStringObject* func_string;
+	JsStringObject* func_string;
 
 	/*	$global-def
 	 *	 |
@@ -27,7 +27,7 @@ struct _defobject{
 	 *
 	 */
 	JsFuncObject* scoping;
-	// vmcode* vm_set;
+	vmcode* vm_set;
 
 	JsAst* ast;
 };

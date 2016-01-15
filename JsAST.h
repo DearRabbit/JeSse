@@ -19,8 +19,6 @@ typedef enum {
 	OP_FUNCTION,
 	OP_DECLARATION,
 	OP_DECLARATOR,
-	OP_ASSIGN,
-	OP_DECLARATOR,
 	OP_ARRAY,
 	OP_ASSIGN,
 	OP_TERNARY,
@@ -55,10 +53,14 @@ typedef enum {
 	OP_CALL,
 	OP_OBJECT,
 	OP_PROPERTY,
-	OP_ARGUMENTS
+	OP_ARGUMENTS,
+	OP_CONTINUE,
+	OP_SWITCH,
+	OP_FUNCTION_EXPR
 } operEnum;	// operations
 
 typedef enum  {
+	IDLET,
 	STRLET,	// --v:
 	NUMLET,	// leaf nodes
 	OPRLET
@@ -82,8 +84,14 @@ typedef struct _nodeType {
 // new operation node
 nodeType* opr(int oper, int nops, ...);
 // new number node
-nodeType* num(int a_num);
+nodeType* num(double a_num);
 // new string node
 nodeType* str(char* a_str);
-// add son to node
-void add(nodeType* node, nodeType* son);
+// new id node
+nodeType* id(char* a_id);
+// add son to node, returns the node
+nodeType* add(nodeType* node, nodeType* son);
+// free abstract syntax tree
+void freeNode(nodeType* root);
+// printTree
+void AstPrint(nodeType* root);

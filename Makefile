@@ -1,4 +1,6 @@
 CC = clang
+LEX = flex
+YACC = bison -dtv
 DBGFLAGS = -Wall -g -O0
 LDFLAGS = 
 
@@ -8,7 +10,18 @@ ALL_OBJECT =
 TEST_TARGET = test
 TARGET = 
 
-all: 
+all: CC=gcc
+all: jesse
+
+jesse: object.o numobject.o stringobject.o boolobject.o dictobject.o\
+	funcobject.o typeobject.o operator.o runtime.o jsvm.o \
+	lex.yy.o yacc.tab.o jsast.o jesse.o main.o
+	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $@
+
+main.o: main.c
+	$(CC) $(DBGFLAGS) -c $<
+jesse.o: jesse.c jesse.h
+	$(CC) $(DBGFLAGS) -c $<
 
 object.o: object.c
 	$(CC) $(DBGFLAGS) -c $^
@@ -56,15 +69,18 @@ lex.yy.c: lex.l yacc.tab.h
 yacc.tab.h yacc.tab.c: yacc.y
 	$(YACC) $<
 
-test_parser.o:	JsAST.c
+jsast.o: jsast.c
 	$(CC) -o $@ -c $< $(DBGFLAGS)
 
-test_parser: CC=gcc
-test_parser: test_parser.o lex.yy.o yacc.tab.o
+test_parser.o: test_parser.c
+	$(CC) -c $<
+
+test_parser: CC=g++
+test_parser: jsast.o lex.yy.o yacc.tab.o test_parser.o
 	$(CC) -o $@ $^ $(DBGFLAGS)
 
 clean:
 	rm -rf *.dSYM/
 	rm -f *.o
 	rm -f $(TEST_TARGET)
-	rm -f yacc.tab.* lex.yy.c
+	rm -f yacc.tab.* lex.yy.c yacc.output
