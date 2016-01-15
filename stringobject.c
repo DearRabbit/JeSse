@@ -85,7 +85,7 @@ _JsString_StringJoin(JsObject *v, JsObject *w)
 	op->ob_shash = 0;
 	if (a != NULL && b != NULL)
 	{
-		memcpy(op->ob_sval, a, len_a);
+		memcpy(op->ob_sval, a, len_a+1);
 		strcat(op->ob_sval, b);
 	}
 	op->ob_sval[size] = '\0';

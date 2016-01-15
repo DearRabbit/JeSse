@@ -369,6 +369,10 @@ relational_expression:
 		{
 			$$ = opr(OP_GE, 2, $1, $3);
 		}
+	|	relational_expression NEQUAL shift_expression
+		{
+			$$ = opr(OP_NEQ, 2, $1, $3);
+		}
 	|	relational_expression INSTANCEOF shift_expression
 		{
 			$$ = opr(OP_INSTANCEOF, 2, $1, $3);
@@ -523,6 +527,14 @@ primary_expression:
 	|	NUMBER
 		{
 			$$ = num($1);
+		}
+	|	TRUE
+		{
+			$$ = bull(1);
+		}
+	|	FALSE
+		{
+			$$ = bull(0);
 		}
 	|	'(' assignment_expression ')'
 		{

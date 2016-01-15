@@ -10,11 +10,20 @@ print(add2);
 print(sub);
 
 str_200 = '200';
-str_nan = 'jjj';
+
+str_nan = 'not a number';
+
 print(str_123 == num_123);
 print(str_200 != num_123);
 
 print(str_nan == num_123);
+<<<<<<< HEAD
 print(str_nan != num_123);
 
 print(3+true+'Bill');
+=======
+// print(str_nan != num_123);
+// res = true;
+res = true+'billllll';
+print(res);
+>>>>>>> refs/remotes/origin/master

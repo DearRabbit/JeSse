@@ -32,6 +32,7 @@ typedef enum {
 	OP_GT,
 	OP_LE,
 	OP_GE,
+	OP_NEQ,
 	OP_INSTANCEOF,
 	OP_IN,
 	OP_LSHIFT,
@@ -63,6 +64,7 @@ typedef enum  {
 	IDLET,
 	STRLET,	// --v:
 	NUMLET,	// leaf nodes
+	BOOLLET,
 	OPRLET
 } nodeEnum;
 
@@ -85,6 +87,8 @@ typedef struct _nodeType {
 nodeType* opr(int oper, int nops, ...);
 // new number node
 nodeType* num(double a_num);
+// new boolean node
+nodeType* bull(int a_bool);
 // new string node
 nodeType* str(char* a_str);
 // new id node
