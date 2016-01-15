@@ -10,7 +10,7 @@ print(add2);
 print(sub);
 
 str_200 = '200';
-str_nan = 'not a number'
+str_nan = 'not a number';
 print(str_123 == num_123);
 print(str_200 != num_123);
 

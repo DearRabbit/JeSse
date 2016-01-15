@@ -37,7 +37,9 @@ static JsObject* evaluate(nodeType* stmt)
 		return JsString_FromString(stmt->strval);	// Can be NULL
 	if(stmt->type == NUMLET)
 		return JsNum_FromDouble(stmt->numval);
-
+	if(stmt->type == BOOLLET)
+		return JsBool_FromInt(stmt->numval);
+	
 	int i;
 	switch(stmt->opr.oper)
 	{
@@ -200,6 +202,10 @@ static JsObject* evaluate(nodeType* stmt)
 		case OP_GE:
 		{
 			return op_binary(stmt->opr.op[0], stmt->opr.op[1], op_ge);
+		}
+		case OP_NEQ:
+		{
+			return op_binary(stmt->opr.op[0], stmt->opr.op[1], op_neq);
 		}
 		case OP_INSTANCEOF:
 		{

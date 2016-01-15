@@ -32,6 +32,7 @@ typedef enum {
 	OP_GT,
 	OP_LE,
 	OP_GE,
+	OP_NEQ,
 	OP_INSTANCEOF,
 	OP_IN,
 	OP_LSHIFT,
@@ -63,6 +64,7 @@ typedef enum  {
 	IDLET,
 	STRLET,	// --v:
 	NUMLET,	// leaf nodes
+	BOOLLET,
 	OPRLET
 } nodeEnum;
 

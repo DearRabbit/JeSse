@@ -43,6 +43,18 @@ nodeType* str(char* a_str)
 
 	return p;
 }
+nodeType* bull(int a_bool)
+{
+	nodeType* p;
+
+	if( (p=(nodeType*)malloc(sizeof(nodeType))) == NULL )
+		Js_FatalError("out of memory\n");
+
+	p->type = BOOLLET;
+	p->numval = a_bool;
+
+	return p;
+}
 nodeType* opr(int oper, int nops, ...)
 {
 	va_list ap;
