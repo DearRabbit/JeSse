@@ -18,5 +18,6 @@ print(str_123 == num_123);
 
 print(str_nan == num_123);
 // print(str_nan != num_123);
-
-// print(3+true+'Bill');
+// res = true;
+res = true+'billllll';
+print(res);

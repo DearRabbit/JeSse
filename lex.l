@@ -60,8 +60,11 @@ undefined	{return UNDEFINED;}
 						}
 
 {StringLiteral}		{
+						dbgprint("String literal:%s\n", yytext);
 						yylval.strval = (char*)malloc(strlen(yytext)-1);
 						strncpy(yylval.strval, yytext+1, strlen(yytext)-2);
+						yylval.strval[strlen(yytext)-2] = 0;
+						dbgprint("strval:%s\n",yylval.strval);
 						return STRINGLITERAL;
 					}
 
