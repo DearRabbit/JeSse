@@ -30,6 +30,7 @@ static JsObject* evaluate(nodeType* stmt)
 		JsObject* name = JsString_FromString(stmt->strval);
 		JsObject* var = JsFunc_GetVariable(current_instance, name);
 		Js_DECREF(name);
+		Js_INCREF(var);
 		return var;
 	}
 	if(stmt->type == STRLET)
@@ -152,7 +153,7 @@ static JsObject* evaluate(nodeType* stmt)
 			JsObject* val = evaluate(stmt->opr.op[1]);
 			JsFunc_SetVariable(current_instance, name, val);
 			Js_DECREF(name);
-//			Js_DECREF(val);
+			Js_DECREF(val);
 			return val;
 		}
 		case OP_TERNARY:
