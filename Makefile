@@ -13,7 +13,7 @@ TARGET = jesse
 all: $(TARGET)
 
 jesse: object.o numobject.o stringobject.o boolobject.o dictobject.o\
-	funcobject.o typeobject.o operator.o runtime.o jsvm.o \
+	funcobject.o typeobject.o operator.o runtime.o \
 	lex.yy.o yacc.tab.o jsast.o jesse.o main.o
 	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $@
 

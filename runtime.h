@@ -9,7 +9,6 @@
 #include "funcobject.h"
 
 #include "operator.h"
-#include "jsvm.h"
 
 typedef JsObject JsNullObject;
 typedef JsObject JsUndefObject;

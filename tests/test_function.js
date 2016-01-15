@@ -24,10 +24,9 @@ function Fib(x) {
 }
 
 var i = 0;
-while (i < 10)
+while (++i < 10)
 {
 	print(Fib(i));
-	i = i + 1;
 }
 
 print('-----------closure:-------------');

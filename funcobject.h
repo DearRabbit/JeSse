@@ -45,11 +45,6 @@ struct _funcobject{
 
 	JsDefObject* func_def;
 
-	// TODO:remove
-	JsFuncObject* callee_func;
-	JsFuncObject* caller_func;
-	// 
-
 	JsDictObject* var_table;
 };
 
@@ -60,12 +55,6 @@ extern JsTypeObject JsFunc_Type;
 #define JsFunc_GetDef(obj) (((JsFuncObject*)(obj))->func_def)
 #define JsFunc_GetScope(obj) (JsFunc_GetDef(obj)->scoping)
 #define JsFunc_GetCode(obj) (JsFunc_GetDef(obj)->vm_set)
-
-#define JsFunc_SetCallingRelation(caller, callee) do						\
-	{																		\
-		((JsFuncObject*)(caller))->callee_func = ((JsFuncObject*)(callee));	\
-		((JsFuncObject*)(callee))->caller_func = ((JsFuncObject*)(caller));	\
-	} while (0)
 	
 int JsFunc_DefVariable(JsFuncObject* func, JsObject* name, JsObject* value);
 int JsFunc_SetVariable(JsFuncObject* func, JsObject* name, JsObject* value);
