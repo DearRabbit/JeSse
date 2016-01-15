@@ -142,10 +142,12 @@ stmt:
 stmt_return:
 		RETURN assignment_expression ';'
 		{
+			dbgprint("At stmt_return\n");
 			$$ = opr(OP_RETURN, 1, $2);
 		}
 	|	RETURN ';'
 		{
+			dbgprint("At stmt_return\n");
 			$$ = opr(OP_RETURN, 0);
 		}
 	;
@@ -209,6 +211,7 @@ function_declaration:
 		}
 	|	FUNCTION IDENTIFIER '(' parameter_list ')' '{' function_body '}'
 		{
+			dbgprint("At function_declaration\n");
 			$$ = opr(OP_FUNCTION, 3, id($2), $4, $7);
 		}
 	;
@@ -222,7 +225,7 @@ stmt_block:
 	;
 
 stmt_variable:
-		VAR variable_declarationList 
+		VAR variable_declarationList ';'
 		{
 			dbgprint("At stmt_variable\n");
 			$$ = $2;
@@ -282,8 +285,12 @@ variable_initializer:
 
 assignment_expression:
 		conditional_expression
+		{
+			dbgprint("At assignment_expression\n");
+		}
 	|	lhs_expression '=' assignment_expression
 		{
+			dbgprint("At assignment_expression\n");
 			$$ = opr(OP_ASSIGN, 2, $1, $3);
 		}
 	;
@@ -303,7 +310,7 @@ or_expression:
 			$$ = opr(OP_OROR, 2, $1, $3);
 		}
 	;
-	
+
 and_expression:
 		bit_or_expression
 	|	and_expression ANDAND bit_or_expression
@@ -479,6 +486,10 @@ function_expression:
 		{
 			$$ = opr(OP_FUNCTION_EXPR, 3, NULL, opr(OP_PARAMETERS, 0), $5);
 		}
+	|	FUNCTION '(' parameter_list ')' '{' function_body '}'
+		{
+			$$ = opr(OP_FUNCTION_EXPR, 3, NULL, $3, $6);
+		}
 	;
 
 call_expression:
@@ -491,6 +502,7 @@ call_expression:
 parameter_list:
 		IDENTIFIER
 		{
+			dbgprint("At parameter_list\n");
 			$$ = opr(OP_PARAMETERS, 1, id($1));
 		}
 	|	parameter_list ',' IDENTIFIER
@@ -511,6 +523,10 @@ primary_expression:
 	|	NUMBER
 		{
 			$$ = num($1);
+		}
+	|	'(' assignment_expression ')'
+		{
+			$$ = $2;
 		}
 	;
 

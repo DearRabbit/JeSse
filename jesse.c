@@ -24,7 +24,7 @@ static JsObject* evaluate(nodeType* stmt)
 {
 	if(!stmt) return Js_Null;	// empty stmt
 
-							// for assignments cannot do this
+							// v: for assignments cannot do this
 	if(stmt->type == IDLET) // get variable from string
 	{
 		JsObject* name = JsString_FromString(stmt->strval);
@@ -91,9 +91,20 @@ static JsObject* evaluate(nodeType* stmt)
 			break;
 		case OP_WHILE:
 		{
-
+			JsObject* ret = Js_Null;
+			JsObject* cond = evaluate(stmt->opr.op[0]);
+			int boolean = JsBool_GetBool(cond);
+			Js_DECREF(cond);
+			while(boolean)
+			{
+				ret = evaluate(stmt->opr.op[1]);
+				if(return_flag)
+					return ret;
+				cond = evaluate(stmt->opr.op[0]);
+				boolean = JsBool_GetBool(cond);
+			}
+			return Js_Null;
 		}
-			break;
 		case OP_FUNCTION:
 		{
 			nodeType* nodeName = stmt->opr.op[0];
@@ -141,7 +152,7 @@ static JsObject* evaluate(nodeType* stmt)
 			JsObject* val = evaluate(stmt->opr.op[1]);
 			JsFunc_SetVariable(current_instance, name, val);
 			Js_DECREF(name);
-			Js_DECREF(val);
+//			Js_DECREF(val);
 			return val;
 		}
 		case OP_TERNARY:
@@ -232,14 +243,32 @@ static JsObject* evaluate(nodeType* stmt)
 		}
 		case OP_LPPLUS:
 		{
-
+			nodeType* nameNode = stmt->opr.op[0];
+			if( nameNode->type != IDLET)
+				Js_FatalError("Error: Self-increase operation cannot perform on a constant\n");
+			JsObject* name = JsString_FromString(nameNode->strval);
+			JsObject* one = JsNum_FromDouble(1.0);
+			JsObject* var = evaluate(stmt->opr.op[0]);
+			JsObject* ret = op_add(var, one);
+			Js_DECREF(one);
+			JsFunc_SetVariable(current_instance, name, ret);
+			Js_DECREF(name);
+			return ret;
 		}
-			break;
 		case OP_LMMINUS:
 		{
-
+			nodeType* nameNode = stmt->opr.op[0];
+			if( nameNode->type != IDLET)
+				Js_FatalError("Error: Self-decrease operation cannot perform on a constant\n");
+			JsObject* name = JsString_FromString(nameNode->strval);
+			JsObject* one = JsNum_FromDouble(1.0);
+			JsObject* var = evaluate(stmt->opr.op[0]);
+			JsObject* ret = op_sub(var, one);
+			Js_DECREF(one);
+			JsFunc_SetVariable(current_instance, name, ret);
+			Js_DECREF(name);
+			return ret;
 		}
-			break;
 		case OP_PREMINUX:
 		{
 			JsObject* ret = evaluate(stmt->opr.op[0]);
@@ -258,7 +287,11 @@ static JsObject* evaluate(nodeType* stmt)
 			break;
 		case OP_RPPLUS:
 		{
-
+			JsObject* one = JsNum_FromDouble(1.0);
+			JsObject* var = evaluate(stmt->opr.op[0]);
+			JsObject* ret = op_add(var, one);
+			Js_DECREF(one);
+			return ret;
 		}
 			break;
 		case OP_RMMINUS:
@@ -279,19 +312,27 @@ static JsObject* evaluate(nodeType* stmt)
 			break;
 		case OP_CALL:
 		{
-			JsObject* func_name = evaluate(stmt->opr.op[0]);
-			JsObject* func_def = JsFunc_GetVariable(current_instance, func_name);
+			if( strcmp( stmt->opr.op[0]->strval, "print" ) == 0)
+			{
+				JsObject* arg = evaluate(stmt->opr.op[1]->opr.op[0]);
+				Js_PRINTLNOBJ(arg);
+				Js_DECREF(arg);
+				return Js_Undefined;
+			}
+			// JsObject* func_name = evaluate(stmt->opr.op[0]);
+			// JsObject* func_def = JsFunc_GetVariable(current_instance, func_name);
+			JsObject* func_def = evaluate(stmt->opr.op[0]);
 			JsObject* func_instance = JsDef_NewInstance(func_def);
 			nodeType* func_root = (nodeType*)JsDef_GetAst(func_def);
 			nodeType* func_para = func_root->opr.op[1];
 			nodeType* call_arg = stmt->opr.op[1];
-			Js_DECREF(func_name);
+			// Js_DECREF(func_name);
 
 			JsObject* para_name;
 			JsObject* arg;
 			for(i=0; i<func_para->opr.nops; i++)
 			{
-				para_name = evaluate(func_para->opr.op[i]);
+				para_name = JsString_FromString(func_root->opr.op[1]->opr.op[i]->strval);
 				arg = evaluate(call_arg->opr.op[i]);
 				if(!arg) arg = Js_Undefined;
 				// !!!set current_instance
@@ -301,7 +342,7 @@ static JsObject* evaluate(nodeType* stmt)
 			}
 			JsFuncObject* last_instance = current_instance;
 			current_instance = (JsFuncObject*)func_instance;
-			JsObject* ret = evaluate(func_root);
+			JsObject* ret = evaluate(func_root->opr.op[2]);
 			current_instance = last_instance;
 			return_flag = 0;
 			return ret;
@@ -318,7 +359,7 @@ static JsObject* evaluate(nodeType* stmt)
 			break;
 		case OP_ARGUMENTS:
 		{
-			// For function calling. Evaluated in evaluated in OP_CALL
+			// For function calling. Evaluated in OP_CALL
 			assert(0);
 		}
 			break;

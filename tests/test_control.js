@@ -1,4 +1,4 @@
-a = 12
+a = 12;
 
 if (a)
 {
@@ -9,10 +9,10 @@ if (a)
 	}
 }
 
-var sum = 0;
-for (var i = 0; i < a; i=i+1)
-{
-	sum = sum + i;
-	print(i + 'loop');
-}
-print(sum);
+// var sum = 0;
+// for (var i = 0; i < a; i=i+1)
+// {
+// 	sum = sum + i;
+// 	print(i + 'loop');
+// }
+// print(sum);

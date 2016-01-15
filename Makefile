@@ -74,6 +74,7 @@ jsast.o: jsast.c
 test_parser.o: test_parser.c
 	$(CC) -c $<
 
+# used stl somewhere...
 test_parser: CC=g++
 test_parser: jsast.o lex.yy.o yacc.tab.o test_parser.o
 	$(CC) -o $@ $^ $(DBGFLAGS)

@@ -65,7 +65,7 @@ undefined	{return UNDEFINED;}
 						return STRINGLITERAL;
 					}
 
-[-&~|^*/%<>(){},.!?:]	{ dbgprint("At single dog all the way\n"); return yytext[0]; }
+[-&~|^*/%<>(){},.!?:]	{ dbgprint("%c\n", yytext[0]); return yytext[0]; }
 
 [0-9]+	|
 [0-9]+"."[0-9]*	|
@@ -108,6 +108,8 @@ undefined	{return UNDEFINED;}
 "||"		{return OROR;}
 "|="		{return OREQUAL;}
 "^="		{return XOR;}
+"//".*(\r\n|\r|\n) {dbgprint("At //\n");}
+"/*"(.|\r|\n)*"*/" {dbgprint("At /*\n");}
 "\n"		{dbgprint("At \\n\n"); }
 [ \t\r]+	{dbgprint("At empty\n");}
 <<EOF>>		{dbgprint("At EOF\n"); return ENDOFFILE;}

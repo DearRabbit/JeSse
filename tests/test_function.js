@@ -8,5 +8,5 @@ function function_closure (x) {
 }
 
 a = function_closure(2);
-b = a();
+b = a(2);
 print(b);
