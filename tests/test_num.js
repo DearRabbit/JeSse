@@ -5,7 +5,7 @@ c = 1E4;
 print(a);
 print(b);
 print(c);
-
+print('------------------------');
 a = 2;
 b = 10000;
 
@@ -17,9 +17,10 @@ print(add);
 print(sub);
 print(mul);
 print(div);
+print('------------------------');
 
 a = 12345678901234567890;
 print(a);
 
-a = (c + 12345 + b) / 2;
+a = (c - 12345 + b) / 2;
 print(a);

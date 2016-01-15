@@ -12,8 +12,10 @@ int main(int argc, char** argv)
 	}
 	nodeType* rootAst;
 	yyparse(&rootAst);
+#ifdef JS_DEBUG
 	dbgprint("parse complete\n");
-//	AstPrint(rootAst);
+#endif
+	// AstPrint(rootAst);
 	execute(rootAst);
 
 	freeNode(rootAst);

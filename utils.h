@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define JS_DEBUG
+#undef JS_DEBUG
 #define CHAR_BIT 8
 
 typedef uint64_t u64;

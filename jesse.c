@@ -421,7 +421,7 @@ void execute(nodeType* root)
 	assert(root->type == OPRLET && root->opr.oper == OP_STMTS);
 	init();
 	evaluate(root);
-	Js_PRINTLNOBJ(global_instance->var_table);
+	// Js_PRINTLNOBJ(global_instance->var_table);
 	deinit();
 	Js_Exit();
 }
