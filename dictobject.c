@@ -435,6 +435,37 @@ dict_dealloc(JsDictObject* mp)
 		Js_Free(mp);
 }
 
+static int
+dict_print(JsDictObject *v, FILE *fp)
+{
+    ssize_t i, rec_count = v->ma_used;
+    JsDictEntry* entryPtr = v->ma_table;
+    fputc('{', fp);
+    for (i = 0; i < rec_count; ++i)
+    {
+        while (entryPtr->me_value == NULL)
+            entryPtr++;
+        
+        _Js_PRINTFP(entryPtr->me_key, fp);
+        fputc(':', fp);
+        _Js_PRINTFP(entryPtr->me_value, fp);
+        entryPtr++;
+        if (i != rec_count-1)
+            fputc(',', fp);
+    }
+
+    fputc('}', fp);
+
+    return 0;
+}
+
+static JsObject *
+dict_tostring(JsDictObject *v)
+{
+    JsObject *string = JsString_FromString("[Object]");
+    return string;
+}
+
 JsTypeObject JsDict_Type = {
 	JsObject_HEAD_INIT(&JsType_Type)
 	"object",			// in Javascript, it's object instead of dict
@@ -445,10 +476,8 @@ JsTypeObject JsDict_Type = {
 
 	(newfunc)dict_new,					/* tp_new, also generate by api.*/
 	(destructor)dict_dealloc,			/* tp_dealloc */
-	//(printfunc)dict_print,				/* tp_print */
-	//(tostringfunc)dict_tostring,		/* tp_tostr */
-	NULL,
-	NULL,
+	(printfunc)dict_print,				/* tp_print */
+	(tostringfunc)dict_tostring,		/* tp_tostr */
 
 	NULL,								/* tp_compare */
 	(hashfunc)_Js_HashPointer,			/* tp_hash, use the common version */

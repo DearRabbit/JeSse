@@ -112,7 +112,7 @@ static int
 string_print(JsStringObject *obj, FILE *fp)
 {
 	// unlike number, mismatch of type could cause alot problems.
-	return fprintf(fp, "%s", obj->ob_sval);
+	return fprintf(fp, "\'%s\'", obj->ob_sval);
 }
 
 static JsObject *

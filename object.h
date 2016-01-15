@@ -53,6 +53,11 @@ typedef struct {
 #define Js_XINCREF(op) do { if ((op) == NULL) ; else Js_INCREF(op); } while (0)
 #define Js_XDECREF(op) do { if ((op) == NULL) ; else Js_DECREF(op); } while (0)
 
+#define _Js_PRINTFP(obj, fp) (Js_Type(obj)->tp_print((JsObject *)obj, fp))
+#define Js_PRINTOBJ(obj) (_Js_PRINTFP(obj, stdout))
+#define Js_PRINTLNOBJ(obj) (Js_PRINTOBJ(obj), putchar('\n'))
+
+
 // typedef - function ptr groups:
 // operators
 typedef JsObject* (*unaryfunc)(JsObject *);

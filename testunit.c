@@ -32,9 +32,8 @@ int main()
 	JsDict_SetItem(mydict, var1, value1);
 	JsDict_SetItem(mydict, var2, value2);
 	JsDict_SetItem(mydict, var3, value3);
-	JsDict_DelItem(mydict, var3);
 
-	JsObject* ptr = JsDict_GetItem(mydict, var3);
+	Js_PRINTLNOBJ(mydict);
 	
 
 	// vmcode test[13] = {

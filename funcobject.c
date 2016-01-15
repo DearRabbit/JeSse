@@ -114,27 +114,35 @@ func_dealloc(JsFuncObject *obj)
 }
 
 static int
+def_print(JsDefObject *obj, FILE *fp)
+{
+	fprintf(fp, "[Function Definition]");
+	return 0;
+}
+
+static int
 func_print(JsFuncObject *obj, FILE *fp)
 {
-	return fprintf(fp, "[Function]");
+	fprintf(fp, "[Function]:{[var table]:");
+	_Js_PRINTFP(obj->var_table, fp);
+	fputc('}', fp);
+	return 0;
 }
 
 static JsObject *
 def_tostring(JsDefObject *v) 
 {
 	// return (JsObject*)(v->func_string);
-	JsObject *nullstring = JsString_FromString("");
-	Js_INCREF(nullstring);
-	return nullstring;
+	JsObject *string = JsString_FromString("[Function Definition]");
+	return string;
 }
 
 static JsObject *
 func_tostring(JsFuncObject *v) 
 {
 	// return (JsObject*)(JsFunc_GetDef(v)->func_string);
-	JsObject *nullstring = JsString_FromString("");
-	Js_INCREF(nullstring);
-	return nullstring;
+	JsObject *string = JsString_FromString("[Function]");
+	return string;
 }
 
 JsTypeObject JsDef_Type =
@@ -148,7 +156,7 @@ JsTypeObject JsDef_Type =
 
 	NULL,							/* no new func, generate by api*/
 	(destructor)def_dealloc,		/* tp_dealloc */
-	(printfunc)func_print,			/* tp_print */
+	(printfunc)def_print,			/* tp_print */
 	(tostringfunc)def_tostring,		/* tp_tostr */
 
 	NULL,							/* tp_compare */
