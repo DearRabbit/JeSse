@@ -87,6 +87,8 @@ typedef struct _nodeType {
 nodeType* opr(int oper, int nops, ...);
 // new number node
 nodeType* num(double a_num);
+// new boolean node
+nodeType* bull(int a_bool)
 // new string node
 nodeType* str(char* a_str);
 // new id node
