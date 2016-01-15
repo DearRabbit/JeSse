@@ -22,3 +22,9 @@ JsObject_Hash(JsObject *v)
 	/* Use address as hash value */
 	return _Js_HashPointer(v);
 }
+
+void
+donut_dealloc(JsObject *obj)
+{
+	// do nothing.
+}

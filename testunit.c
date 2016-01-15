@@ -11,8 +11,6 @@ extern JsObject* vmresult;
 #define HASHOBJ(obj) (Js_Type(obj)->tp_hash(obj))
 #define TOSTRINGOBJ(obj) (Js_Type(obj)->tp_tostr(obj))
 
-#define _(ob) ((vmcode)(ob))
-
 int main()
 {
 	_JsNum_Init();

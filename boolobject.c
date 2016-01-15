@@ -69,7 +69,7 @@ JsTypeObject JsBool_Type =
 		JS_TPFLAGS_INT_SUBCLASS,
 
 	NULL,								/* no new func, generate by api*/
-	NULL,								/* tp_dealloc */
+	(destructor)donut_dealloc,			/* tp_dealloc */
 	(printfunc)bool_print,				/* tp_print */
 	(tostringfunc)bool_tostring,		/* tp_tostr */
 

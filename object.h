@@ -110,5 +110,8 @@ extern JsTypeObject JsType_Type;
 uhash _Js_HashPointer(void*);
 uhash JsObject_Hash(JsObject *v);
 
+// do nothing dealloc
+void donut_dealloc(JsObject *);
+
 #define JsType_CheckType(obj) (Js_Type(obj) == &JsTypeObject)
 

@@ -12,7 +12,6 @@ JsDef_New(JsFuncObject* scoping_val, JsAst* ast_val)
 
 	JsObject_INIT(alloc, &JsDef_Type);
 
-	alloc->func_string = NULL;
 	alloc->scoping = scoping_val;
 	alloc->ast = ast_val;
 
@@ -30,9 +29,10 @@ JsDef_NewInstance(JsObject* def)
 
 	JsObject_INIT(alloc, &JsFunc_Type);
 	alloc->func_def = (JsDefObject*)def;
+	Js_INCREF(def);
 
 	// var_table should be new in calling_func
-	alloc->var_table = JsDict_New();
+	alloc->var_table = (JsDictObject*)JsDict_New();
 	return (JsObject*)alloc;
 }
 
@@ -101,13 +101,16 @@ JsFunc_GetVariable(JsFuncObject* func, JsObject* name)
 static void
 def_dealloc(JsDefObject *obj)
 {
-
+	Js_XDECREF(obj->scoping);
+	Js_Free(obj);
 }
 
 static void
 func_dealloc(JsFuncObject *obj)
 {
-
+	Js_XDECREF(obj->func_def);
+	Js_DECREF(obj->var_table);
+	Js_Free(obj);
 }
 
 static int
@@ -119,13 +122,19 @@ func_print(JsFuncObject *obj, FILE *fp)
 static JsObject *
 def_tostring(JsDefObject *v) 
 {
-    return (JsObject*)(v->func_string);
+	// return (JsObject*)(v->func_string);
+	JsObject *nullstring = JsString_FromString("");
+	Js_INCREF(nullstring);
+	return nullstring;
 }
 
 static JsObject *
 func_tostring(JsFuncObject *v) 
 {
-    return (JsObject*)(JsFunc_GetDef(v)->func_string);
+	// return (JsObject*)(JsFunc_GetDef(v)->func_string);
+	JsObject *nullstring = JsString_FromString("");
+	Js_INCREF(nullstring);
+	return nullstring;
 }
 
 JsTypeObject JsDef_Type =

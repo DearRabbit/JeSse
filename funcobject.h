@@ -17,7 +17,7 @@ struct _defobject{
 	 *	char* func_string = 
 	 *	'function(){\n\treturn 0;\n}'
 	 */
-	JsStringObject* func_string;
+	// JsStringObject* func_string;
 
 	/*	$global-def
 	 *	 |
@@ -45,8 +45,10 @@ struct _funcobject{
 
 	JsDefObject* func_def;
 
+	// TODO:remove
 	JsFuncObject* callee_func;
 	JsFuncObject* caller_func;
+	// 
 
 	JsDictObject* var_table;
 };

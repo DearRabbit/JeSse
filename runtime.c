@@ -137,7 +137,7 @@ JsTypeObject JsNull_Type = {
 	JS_TPFLAGS_DEFAULT,
 
 	NULL,							/* tp_new*/
-	NULL,							/* tp_dealloc */
+	donut_dealloc,					/* tp_dealloc */
 	(printfunc)null_print,			/* tp_print */
 	(tostringfunc)null_tostr,		/* tp_tostr */
 
@@ -154,7 +154,7 @@ JsTypeObject JsUndef_Type = {
 	JS_TPFLAGS_DEFAULT,
 
 	NULL,							/* tp_new*/
-	NULL,							/* tp_dealloc */
+	donut_dealloc,					/* tp_dealloc */
 	(printfunc)undef_print,			/* tp_print */
 	(tostringfunc)undef_tostr,		/* tp_tostr */
 
