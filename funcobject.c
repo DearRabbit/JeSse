@@ -3,6 +3,24 @@
 #include <assert.h>
 
 JsObject*
+JsDef_New(JsFuncObject* scoping_val, JsAst* ast_val)
+{
+	register JsDefObject* alloc;
+
+	assert(JsFunc_CheckType(scoping_val));
+	alloc = Js_Malloc(sizeof(JsDefObject));
+
+	JsObject_INIT(alloc, &JsDef_Type);
+
+	alloc->func_string = NULL;
+	alloc->scoping = scoping_val;
+	alloc->ast = ast_val;
+
+	Js_INCREF(scoping_val);
+	return (JsObject*)alloc;
+}
+
+JsObject*
 JsDef_NewInstance(JsObject* def)
 {
 	register JsFuncObject* alloc;

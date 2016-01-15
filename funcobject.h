@@ -17,7 +17,7 @@ struct _defobject{
 	 *	char* func_string = 
 	 *	'function(){\n\treturn 0;\n}'
 	 */
-	// JsStringObject* func_string;
+	JsStringObject* func_string;
 
 	/*	$global-def
 	 *	 |
@@ -35,6 +35,8 @@ struct _defobject{
 extern JsTypeObject JsDef_Type;
 
 #define JsDef_CheckType(obj) (Js_Type(obj) == &JsDef_Type)
+
+JsObject* JsDef_New(JsFuncObject*, JsAst*);
 JsObject* JsDef_NewInstance(JsObject* def);
 #define JsDef_GetAst(obj) (((JsDefObject*)(obj)) -> ast)
 

@@ -86,7 +86,7 @@ typedef struct _typeobject {
 	ssize_t tp_basicsize, tp_itemsize; /* For allocation */
 
 	/* Flags to define presence of optional/expanded features */
-    long tp_flags;
+	long tp_flags;
 
 	/* Methods to implement standard operations */
 	newfunc tp_new;
