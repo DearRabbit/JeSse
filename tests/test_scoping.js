@@ -1,14 +1,18 @@
-var b = 0;
-x = 0;
-
-function func() {
-	b = 2;
-	var x = 2;
-
-	print(b);
+var x;
+	
+function sub2() {
 	print(x);
 }
+function sub3() { 
+	var x; 
+	x = 3; 
+	sub4(sub2); 
+}
+function sub4(subx) {
+	var x;
+	x = 4; 
+	subx(); 
+}
 
-func();
-print(b);
-print(x);
+x = 1;
+sub3(); 

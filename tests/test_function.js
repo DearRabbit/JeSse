@@ -31,8 +31,9 @@ while (++i < 10)
 
 print('-----------closure:-------------');
 
-function function_closure (x) {
-	var b = x + 1;
+function function_closure (b) {
+	var x = b + 1;
+	print(x);
 	return function (y) {
 		x = x + y;
 		return x;

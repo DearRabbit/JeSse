@@ -341,7 +341,7 @@ static JsObject* evaluate(nodeType* stmt)
 			{
 				para_name = JsString_FromString(func_root->opr.op[1]->opr.op[i]->strval);
 				arg = evaluate(call_arg->opr.op[i]);
-				if(!arg) arg = Js_Undefined;
+				if(arg == Js_Null) arg = Js_Undefined;
 				// !!!set current_instance
 				JsFunc_DefVariable((JsFuncObject*)func_instance, para_name, arg);
 				Js_DECREF(para_name);
