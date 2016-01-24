@@ -114,6 +114,8 @@ static JsObject* evaluate(nodeType* stmt)
 			JsObject* name = JsString_FromString(nodeName->strval);
 			JsObject* def = JsDef_New(current_instance, (JsAst*)(stmt));
 			JsFunc_SetVariable(current_instance, name, def);
+			Js_DECREF(name);
+			Js_DECREF(def);
 			return Js_Null;
 		}
 		case OP_DECLARATION:
@@ -352,6 +354,8 @@ static JsObject* evaluate(nodeType* stmt)
 			JsObject* ret = evaluate(func_root->opr.op[2]);
 			current_instance = last_instance;
 			return_flag = 0;
+			Js_DECREF(func_instance);
+			Js_DECREF(func_def);
 			return ret;
 		}
 		case OP_OBJECT:
@@ -409,6 +413,7 @@ void init()
 
 void deinit()
 {
+	Js_DECREF(global_instance);
 	_JsDict_Deinit();
 	_JsBaseVar_Deinit();
 	_JsBool_Deinit();
