@@ -413,7 +413,7 @@ void init()
 
 void deinit()
 {
-	Js_DECREF(global_instance);
+	_Js_Dealloc(global_instance);
 	_JsDict_Deinit();
 	_JsBaseVar_Deinit();
 	_JsBool_Deinit();

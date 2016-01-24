@@ -17,29 +17,29 @@ nodeType* num(double a_num)
 }
 nodeType* id(char* a_id)
 {
-	char* s;
+	// char* s;
 	nodeType* p;
 
 	if( (p = (nodeType*)malloc(sizeof(nodeType)) ) == NULL )
 		Js_FatalError("out of memory\n");
 
-	STRDUP_NEW(s, a_id);
+	//STRDUP_NEW(s, a_id);
 	p->type = IDLET;
-	p->strval = s;
+	p->strval = a_id;
 
 	return p;
 }
 nodeType* str(char* a_str)
 {
-	char* s;
+	// char* s;
 	nodeType* p;
 
 	if( (p = (nodeType*)malloc(sizeof(nodeType)) ) == NULL )
 ;//		yyerror("out of memory");
 
-	STRDUP_NEW(s, a_str);
+	//STRDUP_NEW(s, a_str);
 	p->type = STRLET;
-	p->strval = s;
+	p->strval = a_str;
 
 	return p;
 }
@@ -100,7 +100,7 @@ void freeNode(nodeType* p)
 		}
 		free(p->opr.op);
 	}
-	if(p->type == STRLET)
+	if(p->type == STRLET || p->type == IDLET)
 		free(p->strval);
 	// printf("Node type:%d\n", p->type);
 	free(p);

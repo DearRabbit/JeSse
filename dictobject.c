@@ -490,12 +490,11 @@ int _JsDict_Init(void)
 
 void _JsDict_Deinit(void)
 {
-    ssize_t i;
-    for (i = numfree - 1; i >= 0; --i)
-    {
-        // if there's a outer table, it has been freed in dealloc.
-        if (free_list[i] != NULL)
-            free(free_list[i]);
+    JsDictObject *op;
+
+    while (numfree) {
+        op = free_list[--numfree];
+        Js_Free(op);
     }
     if (dummy != NULL)
     {
