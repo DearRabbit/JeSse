@@ -3,3 +3,9 @@
 .DS_Store
 
 test
+jesse
+jesse.dSYM/
+lex.yy.c
+yacc.output
+yacc.tab.c
+yacc.tab.h

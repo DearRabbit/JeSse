@@ -19,6 +19,7 @@
 	static JsNumObject *small_ints[NSMALLNEGINTS + NSMALLPOSINTS];
 #endif
 
+// ?: What's the proper buffer size?
 #define NUM_BUFFERSIZE 24
 
 // C - API
@@ -116,6 +117,8 @@ _num_internal_tocstring(JsNumObject *v, char* buffer)
 	 *	__sprintf_chk (in /usr/lib/system/libsystem_c.dylib)
 	 *	_num_internal_tocstring (numobject.c)
 	 */
+
+	// Grisu 3
 	sprintf(buffer, "%g", v->ob_ival);
 }
 
