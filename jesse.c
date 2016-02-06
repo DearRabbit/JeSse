@@ -328,34 +328,41 @@ static JsObject* evaluate(nodeType* stmt)
 				Js_DECREF(arg);
 				return Js_Undefined;
 			}
-			// JsObject* func_name = evaluate(stmt->opr.op[0]);
-			// JsObject* func_def = JsFunc_GetVariable(current_instance, func_name);
+			
 			JsObject* func_def = evaluate(stmt->opr.op[0]);
 			JsObject* func_instance = JsDef_NewInstance(func_def);
+			
 			nodeType* func_root = (nodeType*)JsDef_GetAst(func_def);
 			nodeType* func_para = func_root->opr.op[1];
 			nodeType* call_arg = stmt->opr.op[1];
-			// Js_DECREF(func_name);
 
 			JsObject* para_name;
 			JsObject* arg;
-			for(i=0; i<func_para->opr.nops; i++)
+			for(i = 0; i < func_para->opr.nops; i++)
 			{
 				para_name = JsString_FromString(func_root->opr.op[1]->opr.op[i]->strval);
-				arg = evaluate(call_arg->opr.op[i]);
-				if(arg == Js_Null) arg = Js_Undefined;
-				// !!!set current_instance
+				if( i >= call_arg->opr.nops )
+					arg = Js_Undefined;
+				else
+					arg = evaluate(call_arg->opr.op[i]);
+				if(arg == Js_Null)
+					arg = Js_Undefined;
 				JsFunc_DefVariable((JsFuncObject*)func_instance, para_name, arg);
 				Js_DECREF(para_name);
 				Js_DECREF(arg);
 			}
+			
 			JsFuncObject* last_instance = current_instance;
 			current_instance = (JsFuncObject*)func_instance;
+			
 			JsObject* ret = evaluate(func_root->opr.op[2]);
+			
 			current_instance = last_instance;
 			return_flag = 0;
+			
 			Js_DECREF(func_instance);
 			Js_DECREF(func_def);
+			
 			return ret;
 		}
 		case OP_OBJECT:
@@ -392,7 +399,6 @@ static JsObject* evaluate(nodeType* stmt)
 	Js_FatalError("Unrecognized operation\n");
 }
 
-//   v: All things are done here
 void init()
 {
 	_JsNum_Init();
@@ -420,13 +426,13 @@ void deinit()
 	_JsNum_Deinit();
 }
 
+//   v: All things are done here
 void execute(nodeType* root)
 {
 	assert(root != NULL);
 	assert(root->type == OPRLET && root->opr.oper == OP_STMTS);
 	init();
 	evaluate(root);
-	// Js_PRINTLNOBJ(global_instance->var_table);
 	deinit();
 	Js_Exit();
 }

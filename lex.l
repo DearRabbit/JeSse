@@ -77,7 +77,7 @@ undefined	{return UNDEFINED;}
 [0-9]+"."[0-9]*[eE][-+]?[0-9]+	|
 "."[0-9]+[eE][-+]?[0-9]+	{ 
 								dbgprint("At number:%s\n", yytext);
-								yylval.numval = atof(yytext);  
+								yylval.numval = atof(yytext);
 								return NUMBER; 
 							}
 

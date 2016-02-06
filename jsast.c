@@ -8,7 +8,7 @@ nodeType* num(double a_num)
 	nodeType* p;
 
 	if( (p=(nodeType*)malloc(sizeof(nodeType))) == NULL )
-;//		yyerror("out of memory");
+		Js_FatalError("out of memory\n");
 
 	p->type = NUMLET;
 	p->numval = a_num;
@@ -17,13 +17,11 @@ nodeType* num(double a_num)
 }
 nodeType* id(char* a_id)
 {
-	// char* s;
 	nodeType* p;
 
 	if( (p = (nodeType*)malloc(sizeof(nodeType)) ) == NULL )
 		Js_FatalError("out of memory\n");
 
-	//STRDUP_NEW(s, a_id);
 	p->type = IDLET;
 	p->strval = a_id;
 
@@ -31,13 +29,11 @@ nodeType* id(char* a_id)
 }
 nodeType* str(char* a_str)
 {
-	// char* s;
 	nodeType* p;
 
 	if( (p = (nodeType*)malloc(sizeof(nodeType)) ) == NULL )
-;//		yyerror("out of memory");
+		Js_FatalError("out of memory\n");
 
-	//STRDUP_NEW(s, a_str);
 	p->type = STRLET;
 	p->strval = a_str;
 
@@ -62,9 +58,9 @@ nodeType* opr(int oper, int nops, ...)
 	int i;
 
 	if( (p=(nodeType*)malloc(sizeof(nodeType))) == NULL)
-;//		yyerror("out of memory");
+		Js_FatalError("out of memory\n");
 	if( (p->opr.op=(nodeType**)malloc(sizeof(nodeType*) * nops)) == NULL)
-;//		yyerror("out of memory");
+		Js_FatalError("out of memory\n");
 
 	p->type = OPRLET;
 	p->opr.oper = (operEnum)oper;
@@ -102,7 +98,7 @@ void freeNode(nodeType* p)
 	}
 	if(p->type == STRLET || p->type == IDLET)
 		free(p->strval);
-	// printf("Node type:%d\n", p->type);
+
 	free(p);
 }
 
@@ -147,23 +143,3 @@ void AstPrint(nodeType* root)
 	}
 }
 #endif
-// extern void yyparse(nodeType **root);
-
-// int main(int argc, char** argv)
-// {
-// 	extern FILE *yyin, *yyout;
-// 	yyin = fopen(argv[1], "r");
-// 	if(!yyin)
-// 	{
-// 		fprintf(stderr, "File not found: %s\n", argv[1]);
-// 		return -1;
-// 	}
-// 	nodeType* rootAst;
-// 	yyparse(&rootAst);
-// 	dbgprint("parse complete\n");
-// 	AstPrint(rootAst);
-// 	freeNode(rootAst);
-// 	fclose(yyin);
-// 	return 0;
-// }
-
