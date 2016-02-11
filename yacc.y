@@ -93,6 +93,8 @@ int yyerror( nodeType** p, char* s)
 %token ERRORTOKEN
 %token ENDOFLINE
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
 %left GEQUAL LEQUAL EQUAL NEQUAL '>' '<'
 %left '+' '-'
 %left '*' '/'
@@ -122,7 +124,7 @@ stmt_list:
 		{
 			$$ = add($1, $2);
 		}
-	|	{dbgprint("At Empty\n"); $$ = NULL;}/* empty stmt */
+	//|	{dbgprint("At Empty\n"); $$ = NULL;}/* empty stmt */
 	;
 
 stmt:
@@ -152,7 +154,7 @@ stmt_return:
 		}
 	;
 stmt_if:
-		IF '(' assignment_expression ')' stmt
+		IF '(' assignment_expression ')' stmt %prec LOWER_THAN_ELSE
 		{
 			$$ = opr(OP_IF, 2, $3, $5);
 		}
