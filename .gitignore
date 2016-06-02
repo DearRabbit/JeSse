@@ -9,6 +9,3 @@ lex.yy.c
 yacc.output
 yacc.tab.c
 yacc.tab.h
-
-.idea
-*.iml

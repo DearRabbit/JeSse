@@ -2,9 +2,9 @@ CC = gcc
 LEX = flex
 YACC = bison -dtv
 DBGFLAGS = -Wall -g -O0
-LDFLAGS = 
+LDFLAGS =
 
-.PHONY = clean all test
+.PHONY: clean all test
 
 ALL_OBJECT =
 TEST_TARGET = test
@@ -12,7 +12,7 @@ TARGET = jesse
 
 all: $(TARGET)
 
-jesse: object.o numobject.o stringobject.o boolobject.o dictobject.o\
+$(TARGET): object.o numobject.o stringobject.o boolobject.o dictobject.o\
 	funcobject.o typeobject.o operator.o runtime.o \
 	lex.yy.o yacc.tab.o jsast.o jesse.o main.o
 	$(CC) $(DBGFLAGS) $(LDFLAGS) $^ -o $@
