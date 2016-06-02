@@ -10,12 +10,12 @@ static JsObject *dummy;
 static JsDictEntry*
 lookdict_string(JsDictObject *mp, JsObject *key, uhash hash);
 
-#define EMPTY_TO_MINSIZE(mp) do {									\
-	memset((mp)->ma_smalltable, 0, sizeof((mp)->ma_smalltable));	\
-	(mp)->ma_used = (mp)->ma_fill = 0;								\
-	(mp)->ma_table = (mp)->ma_smalltable;							\
-	(mp)->ma_mask = JsDict_MINSIZE - 1;								\
-	} while(0)
+#define EMPTY_TO_MINSIZE(mp) do {                                   \
+    memset((mp)->ma_smalltable, 0, sizeof((mp)->ma_smalltable));    \
+    (mp)->ma_used = (mp)->ma_fill = 0;                              \
+    (mp)->ma_table = (mp)->ma_smalltable;                           \
+    (mp)->ma_mask = JsDict_MINSIZE - 1;                             \
+    } while(0)
 
 // use free list
 #define JsDict_MAXFREELIST 64
@@ -25,20 +25,20 @@ static int numfree;
 JsObject *
 JsDict_New(void)
 {
-	register JsDictObject *mp;
-	if (dummy == NULL) { /* Auto-initialize dummy */
-		dummy = JsString_FromString("<dummy key>");
-	}
-	if (numfree) {
-		mp = free_list[--numfree];
-		_Js_NewReference((JsObject *)mp);
-	} else {
-		mp = Js_Malloc(sizeof(JsDictObject));
-		JsObject_INIT(mp, &JsDict_Type);
-	}
-	EMPTY_TO_MINSIZE(mp);
-	mp->ma_lookup = lookdict_string;
-	return (JsObject *)mp;
+    register JsDictObject *mp;
+    if (dummy == NULL) { /* Auto-initialize dummy */
+        dummy = JsString_FromString("<dummy key>");
+    }
+    if (numfree) {
+        mp = free_list[--numfree];
+        _Js_NewReference((JsObject *)mp);
+    } else {
+        mp = Js_Malloc(sizeof(JsDictObject));
+        JsObject_INIT(mp, &JsDict_Type);
+    }
+    EMPTY_TO_MINSIZE(mp);
+    mp->ma_lookup = lookdict_string;
+    return (JsObject *)mp;
 }
 
 #define PERTURB_SHIFT 5
@@ -46,12 +46,12 @@ JsDict_New(void)
 static JsDictEntry*
 lookdict_string(JsDictObject *mp, JsObject *key, uhash hash)
 {
-	register size_t i;
-	register size_t perturb;
-	register JsDictEntry *freeslot;
-	register size_t mask = (size_t)mp->ma_mask;
-	JsDictEntry *ep0 = mp->ma_table;
-	register JsDictEntry *ep;
+    register size_t i;
+    register size_t perturb;
+    register JsDictEntry *freeslot;
+    register size_t mask = (size_t)mp->ma_mask;
+    JsDictEntry *ep0 = mp->ma_table;
+    register JsDictEntry *ep;
 
     i = hash & mask;
     ep = &ep0[i];
@@ -93,38 +93,38 @@ Returns -1 if an error occurred, or 0 on success.
 static int
 insertdict(JsDictObject *mp, JsObject *key, uhash hash, JsObject *value)
 {
-	register JsDictEntry *ep;
-	JsObject* old_value;
+    register JsDictEntry *ep;
+    JsObject* old_value;
 
-	assert(mp->ma_lookup != NULL);
-	ep = mp->ma_lookup(mp, key, hash);
-	if (ep == NULL) {
+    assert(mp->ma_lookup != NULL);
+    ep = mp->ma_lookup(mp, key, hash);
+    if (ep == NULL) {
         // never reach
         Js_DECREF(key);
         Js_DECREF(value);
-		return -1;
-	}
-	if (ep->me_value != NULL) {
-		old_value = ep->me_value;
-		ep->me_value = value;
-		Js_DECREF(old_value);
-		Js_DECREF(key);
-	}
-	else {
-		if (ep->me_key == NULL)
-			// unused state
-			mp->ma_fill++;
-		else {
-			// dummy state
-			assert(ep->me_key == dummy);
-			Js_DECREF(dummy);
-		}
-		ep->me_key = key;
-		ep->me_hash = hash;
-		ep->me_value = value;
-		mp->ma_used++;
-	}
-	return 0;
+        return -1;
+    }
+    if (ep->me_value != NULL) {
+        old_value = ep->me_value;
+        ep->me_value = value;
+        Js_DECREF(old_value);
+        Js_DECREF(key);
+    }
+    else {
+        if (ep->me_key == NULL)
+            // unused state
+            mp->ma_fill++;
+        else {
+            // dummy state
+            assert(ep->me_key == dummy);
+            Js_DECREF(dummy);
+        }
+        ep->me_key = key;
+        ep->me_hash = hash;
+        ep->me_value = value;
+        mp->ma_used++;
+    }
+    return 0;
 }
 
 /*
@@ -148,12 +148,12 @@ insertdict_clean(register JsDictObject *mp, JsObject *key, uhash hash,
         i = (i << 2) + i + perturb + 1;
         ep = &ep0[i & mask];
     }
-	assert(ep->me_value == NULL);
-	mp->ma_fill++;
-	ep->me_key = key;
-	ep->me_hash = hash;
-	ep->me_value = value;
-	mp->ma_used++;
+    assert(ep->me_value == NULL);
+    mp->ma_fill++;
+    ep->me_key = key;
+    ep->me_hash = hash;
+    ep->me_value = value;
+    mp->ma_used++;
 }
 
 static int
@@ -251,13 +251,13 @@ JsDict_GetItem(JsObject *op, JsObject *key)
         // }
     }
 
-	ep = (mp->ma_lookup)(mp, key, hash);
-	if (ep == NULL) {
+    ep = (mp->ma_lookup)(mp, key, hash);
+    if (ep == NULL) {
         // never reach
         assert(0);
-		return NULL;
-	}
-	return ep->me_value;
+        return NULL;
+    }
+    return ep->me_value;
 }
 
 static int
@@ -410,29 +410,29 @@ JsDict_Clear(JsObject *op)
 static JsObject*
 dict_new(JsTypeObject *type, JsObject *args)
 {
-	return JsDict_New();
+    return JsDict_New();
 }
 
 static void
 dict_dealloc(JsDictObject* mp)
 {
-	register JsDictEntry *ep;
-	ssize_t fill = mp->ma_fill;
-	for (ep = mp->ma_table; fill > 0; ep++) {
-		if (ep->me_key) {
-		--fill;
-			Js_DECREF(ep->me_key);
-			Js_XDECREF(ep->me_value);
-		}
-	}
-	if (mp->ma_table != mp->ma_smalltable)
-	{
-		Js_Free(mp->ma_table);
-	}
-	if (numfree < JsDict_MAXFREELIST && Js_Type(mp) == &JsDict_Type)
-		free_list[numfree++] = mp;
-	else
-		Js_Free(mp);
+    register JsDictEntry *ep;
+    ssize_t fill = mp->ma_fill;
+    for (ep = mp->ma_table; fill > 0; ep++) {
+        if (ep->me_key) {
+        --fill;
+            Js_DECREF(ep->me_key);
+            Js_XDECREF(ep->me_value);
+        }
+    }
+    if (mp->ma_table != mp->ma_smalltable)
+    {
+        Js_Free(mp->ma_table);
+    }
+    if (numfree < JsDict_MAXFREELIST && Js_Type(mp) == &JsDict_Type)
+        free_list[numfree++] = mp;
+    else
+        Js_Free(mp);
 }
 
 static int
@@ -467,20 +467,20 @@ dict_tostring(JsDictObject *v)
 }
 
 JsTypeObject JsDict_Type = {
-	JsObject_HEAD_INIT(&JsType_Type)
-	"object",			// in Javascript, it's object instead of dict
-	sizeof(JsDictObject),
-	0,
+    JsObject_HEAD_INIT(&JsType_Type)
+    "object",           // in Javascript, it's object instead of dict
+    sizeof(JsDictObject),
+    0,
 
-	JS_TPFLAGS_DEFAULT, // not a basetype
+    JS_TPFLAGS_DEFAULT, // not a basetype
 
-	(newfunc)dict_new,					/* tp_new, also generate by api.*/
-	(destructor)dict_dealloc,			/* tp_dealloc */
-	(printfunc)dict_print,				/* tp_print */
-	(tostringfunc)dict_tostring,		/* tp_tostr */
+    (newfunc)dict_new,                  /* tp_new, also generate by api.*/
+    (destructor)dict_dealloc,           /* tp_dealloc */
+    (printfunc)dict_print,              /* tp_print */
+    (tostringfunc)dict_tostring,        /* tp_tostr */
 
-	NULL,								/* tp_compare */
-	(hashfunc)_Js_HashPointer,			/* tp_hash, use the common version */
+    NULL,                               /* tp_compare */
+    (hashfunc)_Js_HashPointer,          /* tp_hash, use the common version */
 };
 
 int _JsDict_Init(void)

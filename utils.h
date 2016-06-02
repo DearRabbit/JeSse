@@ -11,16 +11,16 @@ typedef uint32_t u32;
 typedef int32_t s32;
 
 #ifdef JS_DEBUG
-#	define dbgprint(format,args...) \
-	fprintf(stderr, format, ##args)
+#   define dbgprint(format,args...) \
+    fprintf(stderr, format, ##args)
 #else
-#	define dbgprint(format,args...)
+#   define dbgprint(format,args...)
 #endif
 
 // TODO:use clean up function instead of exit
 #define Js_FatalError(format,args...) \
-	fprintf(stderr, format, ##args),\
-	exit(-1)
+    fprintf(stderr, format, ##args),\
+    exit(-1)
 
 #define RUN_IN_64MODE
 

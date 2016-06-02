@@ -3,9 +3,9 @@
 #include "object.h"
 
 typedef struct {
-	JsObject_VAR_HEAD
-	uhash ob_shash;
-	char ob_sval[1];
+    JsObject_VAR_HEAD
+    uhash ob_shash;
+    char ob_sval[1];
 
     /* Invariants:
      *     ob_sval contains space for 'ob_size+1' elements.

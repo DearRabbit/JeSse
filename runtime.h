@@ -25,9 +25,9 @@ extern JsUndefObject _Js_UndefStruct;
 #define _JsTempVarName_Max 8
 extern JsObject* _Js_TempVarName[_JsTempVarName_Max];
 
-#define JsException_Normal			0
-#define JsException_ParseError		-1
-#define JsException_NullPtrError	-2
+#define JsException_Normal          0
+#define JsException_ParseError      -1
+#define JsException_NullPtrError    -2
 
 // Initialization should be the same order as below.
 

@@ -3,8 +3,8 @@
 #include "object.h"
 
 typedef struct {
-	JsObject_HEAD
-	double ob_ival;
+    JsObject_HEAD
+    double ob_ival;
 } JsNumObject;
 
 extern JsTypeObject JsNum_Type;
